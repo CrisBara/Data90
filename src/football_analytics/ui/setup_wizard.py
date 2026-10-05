@@ -15,7 +15,7 @@ from PySide6.QtWidgets import (
     QVBoxLayout,
 )
 
-from football_analytics.config.paths import project_root
+from football_analytics.config.paths import is_frozen_build, project_root
 
 
 class SetupWizard(QDialog):
@@ -84,7 +84,7 @@ class SetupWizard(QDialog):
         self.open_button.setEnabled(False)
         self.progress.show()
         self.output.setPlainText("Iniciando la migración y el bootstrap…")
-        if getattr(sys, "frozen", False):
+        if is_frozen_build():
             bootstrap = Path(sys.executable).with_name("FootballAnalyticsBootstrap.exe")
             if not bootstrap.is_file():
                 self.progress.hide()

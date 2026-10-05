@@ -4,9 +4,14 @@ import sys
 from pathlib import Path
 
 
+def is_frozen_build() -> bool:
+    """Recognize applications frozen by PyInstaller or compiled by Nuitka."""
+    return bool(getattr(sys, "frozen", False) or "__compiled__" in globals())
+
+
 def _candidate_roots() -> tuple[Path, ...]:
     candidates = [Path.cwd()]
-    if getattr(sys, "frozen", False):
+    if is_frozen_build():
         executable_dir = Path(sys.executable).resolve().parent
         candidates.extend((executable_dir, *executable_dir.parents))
         bundle_dir = getattr(sys, "_MEIPASS", None)

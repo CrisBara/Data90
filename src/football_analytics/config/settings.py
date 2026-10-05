@@ -8,6 +8,9 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 from sqlalchemy.engine import URL
 
 from football_analytics.config.paths import environment_file
+from football_analytics.config.timezones import configure_timezone_search_path
+
+configure_timezone_search_path()
 
 
 class Settings(BaseSettings):
