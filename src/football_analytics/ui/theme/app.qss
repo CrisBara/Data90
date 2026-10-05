@@ -1,0 +1,40 @@
+QWidget {
+    background: #f3f6fa;
+    color: #17263d;
+    font-family: "Segoe UI";
+    font-size: 10pt;
+}
+QMainWindow { background: #f3f6fa; }
+QFrame#header, QFrame#navigation, QFrame#panel {
+    background: #ffffff;
+    border: 1px solid #dce4ee;
+    border-radius: 12px;
+}
+QLabel#appTitle { color: #10223a; font-size: 18pt; font-weight: 650; }
+QLabel#sectionTitle { color: #10223a; font-size: 14pt; font-weight: 600; }
+QLabel#muted { color: #64748b; }
+QPushButton, QToolButton, QComboBox, QDateEdit {
+    background: #ffffff;
+    border: 1px solid #cbd6e3;
+    border-radius: 7px;
+    padding: 7px 10px;
+    min-height: 20px;
+}
+QPushButton:hover, QToolButton:hover { background: #eaf2fb; border-color: #7898bb; }
+QPushButton:checked { background: #173b63; color: #ffffff; border-color: #173b63; }
+QTableWidget {
+    background: #ffffff;
+    alternate-background-color: #f7f9fc;
+    border: none;
+    gridline-color: #e6ebf1;
+    selection-background-color: #dceafa;
+    selection-color: #17263d;
+}
+QHeaderView::section {
+    background: #edf2f7;
+    color: #52657d;
+    border: none;
+    padding: 9px 8px;
+    font-weight: 600;
+}
+QStatusBar { color: #64748b; background: transparent; }

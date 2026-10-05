@@ -1,0 +1,26 @@
+from enum import StrEnum
+
+
+class MatchStatus(StrEnum):
+    SCHEDULED = "SCHEDULED"
+    LIVE = "LIVE"
+    PAUSED = "PAUSED"
+    FINISHED = "FINISHED"
+    POSTPONED = "POSTPONED"
+    SUSPENDED = "SUSPENDED"
+    CANCELLED = "CANCELLED"
+    UNKNOWN = "UNKNOWN"
+
+
+class SyncMode(StrEnum):
+    BOOTSTRAP = "BOOTSTRAP"
+    DAILY = "DAILY"
+    RECONCILIATION = "RECONCILIATION"
+    MANUAL = "MANUAL"
+
+
+class SyncStatus(StrEnum):
+    RUNNING = "RUNNING"
+    SUCCESS = "SUCCESS"
+    PARTIAL = "PARTIAL"
+    FAILED = "FAILED"
