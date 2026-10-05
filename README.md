@@ -41,6 +41,8 @@ Configura la base aislada `football_analytics_pro` y el usuario local de mínimo
 
 Para abrir la aplicación local: `python -m football_analytics`. Todas las pantallas consultan los datos locales; las llamadas a proveedores solo ocurren durante la sincronización manual o bootstrap.
 
+En una base recién creada, la aplicación muestra un asistente para preparar el esquema, sembrar catálogos y cargar datos iniciales. El proceso corre en segundo plano; si una fuente falla, las demás pueden dejar datos disponibles y la app muestra el resultado parcial.
+
 ## Calidad
 
 ```powershell

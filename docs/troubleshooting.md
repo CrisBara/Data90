@@ -10,6 +10,10 @@ Comprueba que el servicio local está activo y que `.env` apunta a `localhost`, 
 
 Al abrir la aplicación aparece una ventana con `Reintentar`, `Ver configuración` y `Salir`. Inicia el servicio PostgreSQL; si cambiaste `.env`, guardá el archivo y elegí `Reintentar`.
 
+## Primera ejecución
+
+Con PostgreSQL disponible, si faltan las migraciones, catálogos o la primera sincronización, se abre el asistente inicial. Elegí `Preparar base y cargar datos` y esperá a que termine. Una ejecución parcial por una fuente externa permite abrir la app; revisá las fuentes y errores en Herramientas.
+
 ## Falta o se rechaza el token
 
 Configura `FOOTBALL_DATA_TOKEN` en `.env`. El token no debe copiarse a código, logs, issues ni commits. OpenLigaDB no necesita token.
