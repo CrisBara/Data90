@@ -7,6 +7,8 @@ from pydantic import Field, SecretStr, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from sqlalchemy.engine import URL
 
+from football_analytics.config.paths import environment_file
+
 
 class Settings(BaseSettings):
     app_env: str = "development"
@@ -64,4 +66,4 @@ class Settings(BaseSettings):
 
 @lru_cache(maxsize=1)
 def get_settings() -> Settings:
-    return Settings()
+    return Settings(_env_file=environment_file())

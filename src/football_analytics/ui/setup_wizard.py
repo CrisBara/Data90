@@ -15,6 +15,8 @@ from PySide6.QtWidgets import (
     QVBoxLayout,
 )
 
+from football_analytics.config.paths import project_root
+
 
 class SetupWizard(QDialog):
     def __init__(self, *, token_configured: bool) -> None:
@@ -67,7 +69,7 @@ class SetupWizard(QDialog):
         layout.addLayout(buttons)
 
         self.process = QProcess(self)
-        self.process.setWorkingDirectory(str(Path.cwd()))
+        self.process.setWorkingDirectory(str(project_root()))
         self.process.setProcessChannelMode(QProcess.ProcessChannelMode.MergedChannels)
         environment = QProcessEnvironment.systemEnvironment()
         environment.insert("PYTHONUNBUFFERED", "1")
@@ -77,17 +79,29 @@ class SetupWizard(QDialog):
         self.process.errorOccurred.connect(self._process_error)
 
     def _start_bootstrap(self) -> None:
-        script = Path.cwd() / "scripts" / "bootstrap.py"
-        if not script.is_file():
-            self.output.setPlainText(f"No se encontró el script de inicialización: {script}")
-            return
-
         self.start_button.setEnabled(False)
         self.exit_button.setEnabled(False)
         self.open_button.setEnabled(False)
         self.progress.show()
         self.output.setPlainText("Iniciando la migración y el bootstrap…")
-        self.process.start(sys.executable, [str(script)])
+        if getattr(sys, "frozen", False):
+            bootstrap = Path(sys.executable).with_name("FootballAnalyticsBootstrap.exe")
+            if not bootstrap.is_file():
+                self.progress.hide()
+                self.exit_button.setEnabled(True)
+                self.start_button.setEnabled(True)
+                self.output.setPlainText(f"No se encontró el asistente de instalación: {bootstrap}")
+                return
+            self.process.start(str(bootstrap), [])
+        else:
+            script = project_root() / "scripts" / "bootstrap.py"
+            if not script.is_file():
+                self.progress.hide()
+                self.exit_button.setEnabled(True)
+                self.start_button.setEnabled(True)
+                self.output.setPlainText(f"No se encontró el script de inicialización: {script}")
+                return
+            self.process.start(sys.executable, [str(script)])
 
     def _append_output(self) -> None:
         chunk = bytes(self.process.readAllStandardOutput()).decode("utf-8", errors="replace")

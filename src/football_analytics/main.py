@@ -9,6 +9,7 @@ from PySide6.QtWidgets import QApplication, QDialog, QMessageBox
 from sqlalchemy import text
 from sqlalchemy.engine import Engine
 
+from football_analytics.config.paths import environment_file, project_root
 from football_analytics.config.settings import get_settings
 from football_analytics.database.session import make_engine, make_session_factory
 from football_analytics.ui.setup_wizard import SetupWizard
@@ -16,8 +17,8 @@ from football_analytics.ui.window import MainWindow
 
 
 def _connect_database() -> Engine | None:
-    config_path = Path.cwd() / ".env"
-    template_path = Path.cwd() / ".env.example"
+    config_path = environment_file()
+    template_path = project_root() / ".env.example"
     while True:
         engine: Engine | None = None
         try:

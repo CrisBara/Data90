@@ -6,7 +6,7 @@ No es un sitio de noticias, livescore profesional ni una aplicación de apuestas
 
 ## Estado actual
 
-Base funcional en desarrollo: configuración tipada, catálogos seed, DTOs neutrales, modelos SQLAlchemy, migración inicial, adaptadores de football-data.org, OpenLigaDB y OpenFootball, bootstrap por competición, resolución de equipos, UPSERT idempotente, snapshots de tablas y consultas locales. La interfaz incluye Inicio, Competiciones con detalle y tablas, Equipos con historial y métricas, Estadísticas por competición/temporada y Herramientas para estado, atribución, calidad e historial de sincronización. La tarea diaria de Windows está registrada a las 08:00 en el equipo de desarrollo. El empaquetado distribuible sigue pendiente.
+Base funcional en desarrollo: configuración tipada, catálogos seed, DTOs neutrales, modelos SQLAlchemy, migración inicial, adaptadores de football-data.org, OpenLigaDB y OpenFootball, bootstrap por competición, resolución de equipos, UPSERT idempotente, snapshots de tablas y consultas locales. La interfaz incluye Inicio, Competiciones con detalle y tablas, Equipos con historial y métricas, Estadísticas por competición/temporada y Herramientas para estado, atribución, calidad e historial de sincronización. La tarea diaria de Windows está registrada a las 08:00 en el equipo de desarrollo.
 
 ## Arquitectura
 
@@ -40,6 +40,8 @@ Configura la base aislada `football_analytics_pro` y el usuario local de mínimo
 `python scripts/bootstrap.py` aplica el esquema, seed de catálogos y luego intenta cargar temporadas activas, equipos, calendario, resultados y tablas. Cada competición se registra por separado; si falla una, las demás continúan y el comando termina con resultado parcial. `python scripts/sync_daily.py` actualiza la ventana diaria y los domingos corre además una reconciliación completa.
 
 Para abrir la aplicación local: `python -m football_analytics`. Todas las pantallas consultan los datos locales; las llamadas a proveedores solo ocurren durante la sincronización manual o bootstrap.
+
+Para generar el paquete de Windows, ejecuta `powershell -ExecutionPolicy Bypass -File .\scripts\build_windows.ps1`. El ejecutable queda en `dist\FootballAnalyticsPro\FootballAnalyticsPro.exe`; mantené `.env` en la carpeta del proyecto `D:\Test Mazzanti` para que la aplicación encuentre las credenciales sin incluirlas en el paquete. PostgreSQL debe estar instalado y ejecutándose localmente.
 
 En una base recién creada, la aplicación muestra un asistente para preparar el esquema, sembrar catálogos y cargar datos iniciales. El proceso corre en segundo plano; si una fuente falla, las demás pueden dejar datos disponibles y la app muestra el resultado parcial.
 
