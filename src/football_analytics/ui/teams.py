@@ -2,7 +2,7 @@
 
 from zoneinfo import ZoneInfo
 
-from PySide6.QtCore import Qt
+from PySide6.QtCore import Qt, QTimer
 from PySide6.QtWidgets import (
     QComboBox,
     QFrame,
@@ -31,6 +31,10 @@ class TeamsPage(QWidget):
         super().__init__()
         self.session_factory = session_factory
         self.timezone = ZoneInfo(get_settings().app_timezone)
+        self._search_timer = QTimer(self)
+        self._search_timer.setSingleShot(True)
+        self._search_timer.setInterval(250)
+        self._search_timer.timeout.connect(self.refresh)
         self._build_ui()
         self.refresh()
 
@@ -49,7 +53,7 @@ class TeamsPage(QWidget):
         self.search_box = QLineEdit()
         self.search_box.setPlaceholderText("Buscar equipo…")
         self.search_box.setClearButtonEnabled(True)
-        self.search_box.textChanged.connect(self.refresh)
+        self.search_box.textChanged.connect(lambda _text: self._search_timer.start())
         self.search_box.setMaximumWidth(320)
         heading.addWidget(self.search_box)
         self.competition_filter = QComboBox()

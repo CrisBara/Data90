@@ -162,10 +162,10 @@ class SourceTeam(Base):
 class Match(TimestampMixin, Base):
     __tablename__ = "matches"
     __table_args__ = (
-        Index("ix_matches_competition_season_id", "competition_season_id"),
         Index("ix_matches_kickoff_utc", "kickoff_utc"),
-        Index("ix_matches_home_team_id", "home_team_id"),
-        Index("ix_matches_away_team_id", "away_team_id"),
+        Index("ix_matches_competition_season_status", "competition_season_id", "status"),
+        Index("ix_matches_home_team_kickoff", "home_team_id", "kickoff_utc"),
+        Index("ix_matches_away_team_kickoff", "away_team_id", "kickoff_utc"),
         Index("ix_matches_status", "status"),
     )
 
