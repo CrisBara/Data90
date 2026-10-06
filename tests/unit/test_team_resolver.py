@@ -25,6 +25,7 @@ def test_source_team_mapping_has_highest_priority() -> None:
         )
         session.commit()
         result = resolve_team(session, "fixture", "team-1", "Man City")
+    engine.dispose()
     assert result.team_id == 1
     assert result.confidence == "source_id"
 
@@ -50,5 +51,6 @@ def test_ambiguous_exact_alias_is_not_merged() -> None:
         )
         session.commit()
         result = resolve_team(session, "fixture", "unknown", "United")
+    engine.dispose()
     assert result.team_id is None
     assert result.ambiguous

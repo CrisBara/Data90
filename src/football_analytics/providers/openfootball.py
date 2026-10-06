@@ -176,9 +176,7 @@ class OpenFootballProvider(HttpProvider):
                 continue
             if date_to is not None and local_kickoff.date() > date_to:
                 continue
-            matches.append(
-                self._normalize_match(item, competition_code, season_start_year, zone)
-            )
+            matches.append(self._normalize_match(item, competition_code, season_start_year, zone))
         return matches
 
     def get_teams(

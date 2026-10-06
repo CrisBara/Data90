@@ -62,7 +62,7 @@ def _database() -> tuple[object, Session]:
 
 
 def test_duplicate_sync_is_idempotent_and_reschedule_keeps_match_id() -> None:
-    _, session = _database()
+    engine, session = _database()
     first = upsert_match(session, _dto(), competition_season_id=1, home_team_id=1, away_team_id=2)
     session.commit()
     match_id = first.match.id
@@ -84,10 +84,11 @@ def test_duplicate_sync_is_idempotent_and_reschedule_keeps_match_id() -> None:
     assert session.scalar(select(Match.id).where(Match.id == match_id)) == match_id
     assert len(session.scalars(select(SourceMatch)).all()) == 1
     session.close()
+    engine.dispose()
 
 
 def test_null_does_not_overwrite_known_score_and_same_source_can_correct_score() -> None:
-    _, session = _database()
+    engine, session = _database()
     original = upsert_match(
         session,
         _dto(status=MatchStatus.FINISHED, home_score_ft=2, away_score_ft=1),
@@ -116,10 +117,11 @@ def test_null_does_not_overwrite_known_score_and_same_source_can_correct_score()
     assert correction.match.id == original.match.id
     assert correction.match.home_score_ft == 3
     session.close()
+    engine.dispose()
 
 
 def test_known_result_replaces_null_and_zero_remains_a_known_score() -> None:
-    _, session = _database()
+    engine, session = _database()
     fixture = upsert_match(session, _dto(), competition_season_id=1, home_team_id=1, away_team_id=2)
     session.commit()
 
@@ -136,10 +138,11 @@ def test_known_result_replaces_null_and_zero_remains_a_known_score() -> None:
     assert result.match.home_score_ft == 0
     assert result.match.away_score_ft == 0
     session.close()
+    engine.dispose()
 
 
 def test_postponed_and_cancelled_statuses_keep_the_match_record() -> None:
-    _, session = _database()
+    engine, session = _database()
     fixture = upsert_match(session, _dto(), competition_season_id=1, home_team_id=1, away_team_id=2)
     session.commit()
     match_id = fixture.match.id
@@ -166,10 +169,11 @@ def test_postponed_and_cancelled_statuses_keep_the_match_record() -> None:
     assert session.scalar(select(Match.id).where(Match.id == match_id)) == match_id
     assert len(session.scalars(select(Match)).all()) == 1
     session.close()
+    engine.dispose()
 
 
 def test_lower_priority_conflict_is_recorded_without_overwrite() -> None:
-    _, session = _database()
+    engine, session = _database()
     original = upsert_match(
         session,
         _dto(status=MatchStatus.FINISHED, home_score_ft=2, away_score_ft=1),
@@ -196,3 +200,4 @@ def test_lower_priority_conflict_is_recorded_without_overwrite() -> None:
     assert len(issues) == 1
     assert issues[0].field_name == "home_score_ft"
     session.close()
+    engine.dispose()

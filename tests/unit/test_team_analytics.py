@@ -77,6 +77,7 @@ def test_team_metrics_use_only_finished_matches_with_known_scores() -> None:
         )
         session.commit()
         metrics = TeamService(session).get_metrics(1, competition_season_id=1)
+    engine.dispose()
 
     assert metrics.played == 4
     assert (metrics.won, metrics.drawn, metrics.lost) == (2, 1, 1)

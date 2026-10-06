@@ -55,6 +55,7 @@ def test_new_season_is_independent_and_source_mapping_is_idempotent() -> None:
     assert len(session.scalars(select(CompetitionSeason)).all()) == 1
     assert len(session.scalars(select(SourceCompetitionSeason)).all()) == 1
     session.close()
+    session.get_bind().dispose()
 
 
 def test_team_import_creates_mapping_and_normalized_aliases() -> None:
@@ -78,3 +79,4 @@ def test_team_import_creates_mapping_and_normalized_aliases() -> None:
     assert "atletico de madrid" in aliases
     assert "atleti" in aliases
     session.close()
+    session.get_bind().dispose()

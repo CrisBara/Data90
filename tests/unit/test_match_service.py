@@ -43,6 +43,7 @@ def test_match_service_filters_by_local_date_and_competition() -> None:
         previous_local_day = MatchService(session).get_matches(date(2026, 10, 4))
         current_local_day = MatchService(session).get_matches(date(2026, 10, 5), ("PL",))
         no_results = MatchService(session).get_matches(date(2026, 10, 5), ())
+    engine.dispose()
 
     assert [match.match_id for match in previous_local_day] == [1]
     assert [match.match_id for match in current_local_day] == [2]
