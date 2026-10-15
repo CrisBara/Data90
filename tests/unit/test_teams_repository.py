@@ -3,9 +3,9 @@ from datetime import UTC, datetime
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from football_analytics.database.base import Base
-from football_analytics.database.models import Competition, CompetitionSeason, Match, Season, Team
-from football_analytics.repositories.teams import search_teams, team_match_history
+from data90.database.base import Base
+from data90.database.models import Competition, CompetitionSeason, Match, Season, Team
+from data90.repositories.teams import search_teams, team_match_history
 
 
 def test_team_search_and_history_use_local_competition_matches() -> None:

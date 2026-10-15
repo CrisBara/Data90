@@ -3,15 +3,15 @@ from datetime import UTC, datetime
 from sqlalchemy import create_engine, event
 from sqlalchemy.orm import Session
 
-from football_analytics.database.base import Base
-from football_analytics.database.models import (
+from data90.database.base import Base
+from data90.database.models import (
     Competition,
     CompetitionSeason,
     Match,
     Season,
     Team,
 )
-from football_analytics.services.statistics_service import StatisticsService
+from data90.services.statistics_service import StatisticsService
 
 
 def test_competition_statistics_use_a_fixed_number_of_queries_and_skip_unknown_scores() -> None:

@@ -6,11 +6,11 @@ import requests
 from sqlalchemy import create_engine, select
 from sqlalchemy.orm import sessionmaker
 
-from football_analytics.database.base import Base
-from football_analytics.database.models import AppSetting
-from football_analytics.domain.exceptions import ProviderAuthenticationError
-from football_analytics.providers.api_football import ApiFootballProvider
-from football_analytics.services.api_football_player_sync import (
+from data90.database.base import Base
+from data90.database.models import AppSetting
+from data90.domain.exceptions import ProviderAuthenticationError
+from data90.providers.api_football import ApiFootballProvider
+from data90.services.api_football_player_sync import (
     QUOTA_SETTING,
     DailyQuotaReached,
     _player_statistics,

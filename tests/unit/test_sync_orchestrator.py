@@ -3,15 +3,15 @@ from datetime import UTC, date, datetime
 from sqlalchemy import create_engine, select
 from sqlalchemy.orm import sessionmaker
 
-from football_analytics.config.constants import COMPETITIONS, SOURCES
-from football_analytics.database.base import Base
-from football_analytics.database.models import Competition, DataSource, SyncRunItem
-from football_analytics.domain.dto import NormalizedSeason
-from football_analytics.domain.enums import SyncMode, SyncStatus
-from football_analytics.domain.exceptions import ProviderError
-from football_analytics.providers.football_data import FootballDataProvider
-from football_analytics.providers.openligadb import OpenLigaDBProvider
-from football_analytics.sync.orchestrator import run_sync
+from data90.config.constants import COMPETITIONS, SOURCES
+from data90.database.base import Base
+from data90.database.models import Competition, DataSource, SyncRunItem
+from data90.domain.dto import NormalizedSeason
+from data90.domain.enums import SyncMode, SyncStatus
+from data90.domain.exceptions import ProviderError
+from data90.providers.football_data import FootballDataProvider
+from data90.providers.openligadb import OpenLigaDBProvider
+from data90.sync.orchestrator import run_sync
 
 
 class PartialFootballProvider(FootballDataProvider):

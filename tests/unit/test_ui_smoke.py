@@ -7,9 +7,9 @@ from PySide6.QtWidgets import QApplication, QHeaderView, QPushButton, QTableWidg
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from football_analytics.database.base import Base
-from football_analytics.ui.home import CalendarPage
-from football_analytics.ui.window import MainWindow
+from data90.database.base import Base
+from data90.ui.home import CalendarPage
+from data90.ui.window import MainWindow
 
 
 def test_main_window_has_no_players_tab_but_keeps_player_entry_points() -> None:
@@ -18,13 +18,13 @@ def test_main_window_has_no_players_tab_but_keeps_player_entry_points() -> None:
     Base.metadata.create_all(engine)
     window = MainWindow(sessionmaker(bind=engine, expire_on_commit=False))
 
-    assert window.windowTitle() == "Football Analytics Pro"
+    assert window.windowTitle() == "Data 90"
     assert window.page_stack.count() == 6
     assert isinstance(window.calendar_page, CalendarPage)
     assert window.page_stack.currentWidget() is window.calendar_page
     home_title = window.findChild(QPushButton, "appTitle")
     assert home_title is not None
-    assert home_title.text() == "Football Analytics Pro"
+    assert home_title.text() == "Data 90"
     assert not hasattr(window, "home_button")
     assert window.page_stack.widget(5) is window.search_page
     assert not window._buttons

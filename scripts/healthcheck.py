@@ -1,7 +1,7 @@
 from sqlalchemy import text
 from sqlalchemy.exc import SQLAlchemyError
 
-from football_analytics.database.session import make_engine
+from data90.database.session import make_engine
 
 
 def main() -> int:

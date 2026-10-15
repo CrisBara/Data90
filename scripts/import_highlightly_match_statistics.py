@@ -2,10 +2,10 @@
 
 import argparse
 
-from football_analytics.config.constants import COMPETITIONS
-from football_analytics.config.settings import get_settings
-from football_analytics.database.session import make_engine, make_session_factory
-from football_analytics.services.highlightly_match_sync import sync_highlightly_match_statistics
+from data90.config.constants import COMPETITIONS
+from data90.config.settings import get_settings
+from data90.database.session import make_engine, make_session_factory
+from data90.services.highlightly_match_sync import sync_highlightly_match_statistics
 
 
 def main() -> int:

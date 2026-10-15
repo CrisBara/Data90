@@ -3,15 +3,15 @@ from datetime import UTC, datetime
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
 
-from football_analytics.database.base import Base
-from football_analytics.database.models import (
+from data90.database.base import Base
+from data90.database.models import (
     Competition,
     CompetitionSeason,
     Match,
     Season,
     Team,
 )
-from football_analytics.services.team_service import TeamService
+from data90.services.team_service import TeamService
 
 
 def test_team_metrics_use_only_finished_matches_with_known_scores() -> None:

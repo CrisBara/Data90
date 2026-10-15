@@ -3,8 +3,8 @@
 from alembic import op
 from sqlalchemy import inspect
 
-import football_analytics.database.models  # noqa: F401
-from football_analytics.database.base import Base
+import data90.database.models  # noqa: F401
+from data90.database.base import Base
 
 revision = "0006_team_coaches"
 down_revision = "0005_player_tackles_won"

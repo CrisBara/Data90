@@ -3,8 +3,8 @@ import json
 import pytest
 import requests
 
-from football_analytics.domain.exceptions import ProviderAuthenticationError, ProviderError
-from football_analytics.providers.highlightly import HighlightlyProvider
+from data90.domain.exceptions import ProviderAuthenticationError, ProviderError
+from data90.providers.highlightly import HighlightlyProvider
 
 
 class FakeResponse(requests.Response):

@@ -1,4 +1,4 @@
-from football_analytics.services.pitchapi_match_sync import _player_values, _team_stat_values
+from data90.services.pitchapi_match_sync import _player_values, _team_stat_values
 
 
 def test_pitchapi_reads_on_target_shots_from_display_label_key() -> None:

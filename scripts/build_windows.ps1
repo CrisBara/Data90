@@ -34,7 +34,7 @@ try {
         "--noconfirm",
         "--clean",
         "--paths", "src",
-        "--collect-data", "football_analytics",
+        "--collect-data", "data90",
         "--collect-submodules", "alembic",
         "--hidden-import", "logging.config",
         "--hidden-import", "psycopg",
@@ -45,7 +45,7 @@ try {
     )
 
     & $python -m PyInstaller --noconfirm --clean --distpath $distRoot `
-        --workpath $buildRoot (Join-Path $projectRoot "FootballAnalyticsPro.spec")
+        --workpath $buildRoot (Join-Path $projectRoot "Data90.spec")
     if ($LASTEXITCODE -ne 0) { throw "Falló el empaquetado de Data90." }
 
     & $python -m PyInstaller @common --onefile --console --name FootballAnalyticsBootstrap `

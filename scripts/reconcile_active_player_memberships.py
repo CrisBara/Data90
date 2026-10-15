@@ -16,15 +16,15 @@ from typing import Any
 
 from sqlalchemy import func, select
 
-from football_analytics.config.settings import get_settings
-from football_analytics.database.models import (
+from data90.config.settings import get_settings
+from data90.database.models import (
     CompetitionSeason,
     Player,
     PlayerTeamSeason,
     Season,
     Team,
 )
-from football_analytics.database.session import make_session_factory
+from data90.database.session import make_session_factory
 
 
 # Player ID: expected name, verified current club, first-party evidence.

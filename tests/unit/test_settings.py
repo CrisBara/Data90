@@ -1,7 +1,7 @@
 import pytest
 from pydantic import ValidationError
 
-from football_analytics.config.settings import Settings
+from data90.config.settings import Settings
 
 
 def test_database_host_must_remain_local() -> None:

@@ -1,9 +1,9 @@
-"""Initial Football Analytics Pro schema."""
+"""Initial Data 90 schema."""
 
 from alembic import op
 
-import football_analytics.database.models  # noqa: F401
-from football_analytics.database.base import Base
+import data90.database.models  # noqa: F401
+from data90.database.base import Base
 
 revision = "0001_initial_schema"
 down_revision = None

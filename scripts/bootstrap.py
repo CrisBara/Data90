@@ -6,19 +6,19 @@ from alembic import command
 from alembic.config import Config
 from sqlalchemy import select
 
-from football_analytics.config.constants import COMPETITIONS, SOURCES
-from football_analytics.database.models import Competition, DataSource, SourceCompetition
-from football_analytics.database.session import make_engine, make_session_factory
-from football_analytics.domain.enums import SyncMode
-from football_analytics.providers.football_data import FootballDataProvider
-from football_analytics.providers.openligadb import OpenLigaDBProvider
-from football_analytics.services.api_football_player_sync import sync_api_football_players
-from football_analytics.services.eredivisie_fantasy_sync import sync_eredivisie_fantasy_players
-from football_analytics.services.football_data_squad_sync import sync_current_football_data_squads
-from football_analytics.services.match_event_sync import sync_match_goal_events
-from football_analytics.services.player_sync import sync_player_statistics
-from football_analytics.services.promiedos_sync import sync_promiedos_player_statistics
-from football_analytics.sync.orchestrator import run_sync
+from data90.config.constants import COMPETITIONS, SOURCES
+from data90.database.models import Competition, DataSource, SourceCompetition
+from data90.database.session import make_engine, make_session_factory
+from data90.domain.enums import SyncMode
+from data90.providers.football_data import FootballDataProvider
+from data90.providers.openligadb import OpenLigaDBProvider
+from data90.services.api_football_player_sync import sync_api_football_players
+from data90.services.eredivisie_fantasy_sync import sync_eredivisie_fantasy_players
+from data90.services.football_data_squad_sync import sync_current_football_data_squads
+from data90.services.match_event_sync import sync_match_goal_events
+from data90.services.player_sync import sync_player_statistics
+from data90.services.promiedos_sync import sync_promiedos_player_statistics
+from data90.sync.orchestrator import run_sync
 
 
 def main() -> int:
@@ -37,7 +37,7 @@ def main() -> int:
     args = parser.parse_args()
     engine = make_engine()
     config = Config("alembic.ini")
-    print("Football Analytics Pro Bootstrap\n")
+    print("Data 90 Bootstrap\n")
     try:
         with engine.connect() as connection:
             connection.exec_driver_sql("SELECT 1")

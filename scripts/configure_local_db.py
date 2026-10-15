@@ -6,7 +6,7 @@ from getpass import getpass
 import psycopg
 from psycopg import sql
 
-from football_analytics.config.settings import get_settings
+from data90.config.settings import get_settings
 
 
 def main() -> int:

@@ -1,10 +1,10 @@
 from datetime import date, datetime
 
-from football_analytics.domain.dto import NormalizedMatch
-from football_analytics.domain.enums import MatchStatus
-from football_analytics.domain.exceptions import ProviderError
-from football_analytics.providers.football_data import FootballDataProvider
-from football_analytics.providers.openligadb import OpenLigaDBProvider
+from data90.domain.dto import NormalizedMatch
+from data90.domain.enums import MatchStatus
+from data90.domain.exceptions import ProviderError
+from data90.providers.football_data import FootballDataProvider
+from data90.providers.openligadb import OpenLigaDBProvider
 
 
 def test_football_data_match_is_normalized_and_keeps_missing_stats_unknown() -> None:

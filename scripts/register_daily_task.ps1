@@ -4,7 +4,7 @@ $projectRoot = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
 $environmentFile = Join-Path $projectRoot '.env'
 $runner = Join-Path $PSScriptRoot 'run_scheduled_sync.ps1'
 $pythonExecutable = Join-Path $projectRoot '.venv\Scripts\python.exe'
-$taskName = 'FootballAnalyticsPro-DailySync'
+$taskName = 'Data90-DailySync'
 
 if (-not (Test-Path -LiteralPath $environmentFile -PathType Leaf)) {
     throw 'No se encontró .env. Configurá primero la base local y el token de football-data.org.'
@@ -50,7 +50,7 @@ $null = Register-ScheduledTask `
     -Trigger $trigger `
     -Settings $settings `
     -Principal $principal `
-    -Description 'Actualiza Football Analytics Pro una vez al día.' `
+    -Description 'Actualiza Data 90 una vez al día.' `
     -Force `
     -ErrorAction Stop
 

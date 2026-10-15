@@ -28,16 +28,16 @@ def ensure_web_server():
     except (OSError, URLError):
         pass
 
-    from football_analytics.web import application
+    from data90.web import application
 
     server = make_server("127.0.0.1", 8765, application)
-    Thread(target=server.serve_forever, name="fap-web-preview", daemon=True).start()
+    Thread(target=server.serve_forever, name="D90-web-preview", daemon=True).start()
     return server
 
 
 def main() -> int:
     app = QApplication(sys.argv)
-    app.setApplicationName("Football Analytics Pro · Vista de prueba")
+    app.setApplicationName("Data 90 · Vista de prueba")
 
     try:
         server = ensure_web_server()
@@ -51,7 +51,7 @@ def main() -> int:
         return 1
 
     window = QMainWindow()
-    window.setWindowTitle("Football Analytics Pro · Vista de prueba HTML")
+    window.setWindowTitle("Data 90 · Vista de prueba HTML")
     window.setMinimumSize(1024, 680)
     window._web_preview_server = server
     browser = QWebEngineView(window)

@@ -1,0 +1,484 @@
+﻿Issue Type,Summary,Description,Priority,Suggested Status,Labels,Components,Assignee,Reporter,External ID
+Bug,D90-QA-001 · PowerShell execution policy bloqueaba configuración,"ID local: D90-QA-001
+Área: PostgreSQL
+Riesgo QA: Medio
+Estado evidenciado: Resuelto según historial
+
+Síntoma: Windows rechazó el script local antes de ejecutarlo.
+Corrección/estado: Se continuó con excepción limitada al proceso actual, sin cambiar política global.
+Evidencia: Salida de consola del usuario, en una salida compartida
+Próximo QA: Revisar guía de ejecución temporal en Windows limpio.
+
+Borrador local; no creado en Jira.",Medium,Revisar evidencia,"D90-qa-draft,medium,needs-verification",PostgreSQL,,,
+Bug,D90-QA-002 · DATABASE_PASSWORD faltante,"ID local: D90-QA-002
+Área: PostgreSQL
+Riesgo QA: Alto
+Estado evidenciado: Resuelto según historial
+
+Síntoma: Configuración informó variable ausente y no pudo crear el rol/base.
+Corrección/estado: Se completó .env local; posterior salida informó éxito.
+Evidencia: Consola del usuario y ejecución exitosa posterior.
+Próximo QA: Confirmar .env ignorado por Git y sin secretos en artefactos.
+
+Borrador local; no creado en Jira.",High,Revisar evidencia,"D90-qa-draft,high,needs-verification",PostgreSQL,,,
+Bug,D90-QA-003 · REASSIGN OWNED tocaba objetos reservados del sistema,"ID local: D90-QA-003
+Área: PostgreSQL
+Riesgo QA: Alto
+Estado evidenciado: Corregido según historial
+
+Síntoma: PostgreSQL rechazó reasignar objetos requeridos por el sistema.
+Corrección/estado: Se limitó propiedad a objetos de aplicación.
+Evidencia: Error DependentObjectsStillExist y salida posterior exitosa.
+Próximo QA: Probar recuperación sobre base vacía y preexistente.
+
+Borrador local; no creado en Jira.",High,Revisar evidencia,"D90-qa-draft,high,needs-verification",PostgreSQL,,,
+Bug,D90-QA-004 · Secuencia SERIAL no podía cambiar de dueño independientemente,"ID local: D90-QA-004
+Área: PostgreSQL
+Riesgo QA: Alto
+Estado evidenciado: Corregido según historial
+
+Síntoma: competitions_id_seq está ligada a la tabla; alterarla aparte falló.
+Corrección/estado: Se corrigió el tratamiento de secuencias y después se informó éxito.
+Evidencia: FeatureNotSupported, mensaje compartido por el usuario.
+Próximo QA: Añadir prueba en instalación y migración limpia.
+
+Borrador local; no creado en Jira.",High,Revisar evidencia,"D90-qa-draft,high,needs-verification",PostgreSQL,,,
+Bug,D90-QA-005 · Fallo DLL QtCore al abrir ejecutable,"ID local: D90-QA-005
+Área: Ejecutable
+Riesgo QA: Alto
+Estado evidenciado: Corregido según historial; regresión incompleta
+
+Síntoma: PyInstaller no localizó QtCore al abrir desde el acceso directo.
+Corrección/estado: Se ajustó el paquete; usuario confirmó que pudo ejecutarlo.
+Evidencia: Captura de error seguida de confirmación.
+Próximo QA: Abrir en Windows limpio desde el acceso directo real.
+
+Borrador local; no creado en Jira.",High,Revisar evidencia,"D90-qa-draft,high,needs-verification",Ejecutable,,,
+Bug,D90-QA-006 · Acceso directo o build anterior no mostraba cambios,"ID local: D90-QA-006
+Área: Ejecutable
+Riesgo QA: Medio
+Estado evidenciado: Corregido según historial, destino actual no inspeccionado
+
+Síntoma: Se reportaron aperturas fallidas y versiones antiguas.
+Corrección/estado: Se reconstruyeron ejecutables y se actualizó el acceso directo en iteraciones previas.
+Evidencia: Solicitudes repetidas de reabrir y confirmaciones visuales.
+Próximo QA: Verificar destino del acceso directo e identificar la versión en pantalla.
+
+Borrador local; no creado en Jira.",Medium,Revisar evidencia,"D90-qa-draft,medium,needs-verification",Ejecutable,,,
+Task,D90-QA-007 · Datos atrasados o temporada incorrecta,"ID local: D90-QA-007
+Área: Actualidad
+Riesgo QA: Alto
+Estado evidenciado: Abierto
+
+Síntoma: Se detectó información 2024 cuando el uso requería 2026/27.
+Corrección/estado: Se mantuvieron temporadas dinámicas y sincronización; las fuentes limitan cobertura.
+Evidencia: Historial de conversación y auditoría local auditoría previa.
+Próximo QA: Mostrar fecha/fuente del dato y reconciliar todas las competiciones.
+
+Borrador local; no creado en Jira.",High,Pendiente de triage,"D90-qa-draft,high,open-follow-up",Actualidad,,,
+Bug,D90-QA-008 · Filtro de competición no acotaba todas las consultas API-Football,"ID local: D90-QA-008
+Área: Sync
+Riesgo QA: Alto
+Estado evidenciado: Corregido, 71 tests documentados
+
+Síntoma: La selección de liga no impedía consultas de jugadores de Eredivisie.
+Corrección/estado: Se pasó filtro a servicio/Bootstrap y conservó cursor global.
+Evidencia: informe de auditoría local, tres rondas.
+Próximo QA: Conservar regresiones de selección múltiple y paginación.
+
+Borrador local; no creado en Jira.",High,Revisar evidencia,"D90-qa-draft,high,needs-verification",Sync,,,
+Task,D90-QA-009 · Tarea diaria depende de disponibilidad de Windows,"ID local: D90-QA-009
+Área: Sync
+Riesgo QA: Alto
+Estado evidenciado: Configurada, no verificada ahora
+
+Síntoma: Se pidió sincronizar a las 21:00 aunque ventana de app esté cerrada.
+Corrección/estado: Task Scheduler usa StartWhenAvailable/WakeToRun; credenciales requieren sesión.
+Evidencia: scripts/register_daily_task.ps1, .env.example.
+Próximo QA: Inspeccionar tarea/log; PC apagada no sincroniza hasta encenderse.
+
+Borrador local; no creado en Jira.",High,Pendiente de triage,"D90-qa-draft,high,open-follow-up",Sync,,,
+Task,D90-QA-010 · Documentación 07:00 contradice configuración 21:00,"ID local: D90-QA-010
+Área: Sync
+Riesgo QA: Medio
+Estado evidenciado: Pendiente
+
+Síntoma: docs/synchronization.md conserva 07:00; script y .env.example dicen 21:00.
+Corrección/estado: No consta que se haya corregido.
+Evidencia: Comparación de archivos locales, captura compartida.
+Próximo QA: Unificar guía, zona horaria y configuración instalada.
+
+Borrador local; no creado en Jira.",Medium,Pendiente de triage,"D90-qa-draft,medium,open-follow-up",Sync,,,
+Task,D90-QA-011 · Las APIs gratis no cubren todos los campos/temporadas,"ID local: D90-QA-011
+Área: Fuentes
+Riesgo QA: Alto
+Estado evidenciado: Limitación abierta
+
+Síntoma: Planes gratuitos y cobertura varían; varias fuentes no ofrecen estadísticas actuales.
+Corrección/estado: Se sumaron fuentes y se preservan nulos sin reemplazar con campañas antiguas.
+Evidencia: docs/providers.md; docs/player-data-coverage.md.
+Próximo QA: Mantener matriz liga/campo/fuente/cuota/licencia/fecha.
+
+Borrador local; no creado en Jira.",High,Pendiente de triage,"D90-qa-draft,high,open-follow-up",Fuentes,,,
+Task,D90-QA-012 · Perfiles incompletos,"ID local: D90-QA-012
+Área: Jugadores
+Riesgo QA: Alto
+Estado evidenciado: Abierto, cobertura parcial
+
+Síntoma: Edad, nacionalidad, posición y estadísticas individuales faltan en parte de las fichas.
+Corrección/estado: Se añadieron servicios y fichas; ausencias se conservan como desconocidas.
+Evidencia: Auditoría auditoría previa: perfil parcial y pierna hábil en cero.
+Próximo QA: Recalcular completitud jugador a jugador por temporada.
+
+Borrador local; no creado en Jira.",High,Pendiente de triage,"D90-qa-draft,high,open-follow-up",Jugadores,,,
+Task,"D90-QA-013 · Apariciones, titularidad y remates sin cobertura en cinco competiciones","ID local: D90-QA-013
+Área: Jugadores
+Riesgo QA: Alto
+Estado evidenciado: Pendiente de reauditoría
+
+Síntoma: Línea base del auditoría previa registró cero filas de jugador-partido en PL, LaLiga, Serie A, UCL y UEL.
+Corrección/estado: Se agregaron ESPN/Highlightly/PitchAPI e importadores posteriores.
+Evidencia: informe de auditoría local; docs/providers.md.
+Próximo QA: Medir cobertura actual y contrastar muestra con fuente fiable.
+
+Borrador local; no creado en Jira.",High,Pendiente de triage,"D90-qa-draft,high,open-follow-up",Jugadores,,,
+Bug,"D90-QA-014 · Duplicados de identidad (p. ej. Kaiki, variantes Nico Paz)","ID local: D90-QA-014
+Área: Jugadores
+Riesgo QA: Alto
+Estado evidenciado: No certificado
+
+Síntoma: Se detectaron alias y registros duplicados; fusión automática puede unir personas distintas.
+Corrección/estado: Se trabajó en claves/alias; no consta auditoría global final.
+Evidencia: Historial de usuario; modelos/repository player.
+Próximo QA: Generar lista de candidatos por ID/alias/nacimiento/club y revisar uno a uno.
+
+Borrador local; no creado en Jira.",High,Pendiente de triage,"D90-qa-draft,high,open-follow-up",Jugadores,,,
+Task,D90-QA-015 · Asociaciones dudosas y cobertura desigual,"ID local: D90-QA-015
+Área: Planteles
+Riesgo QA: Alto
+Estado evidenciado: Pendiente de auditoría total
+
+Síntoma: La línea base dejó casos de asociaciones y equipos sin jugadores vinculados.
+Corrección/estado: Importadores omiten algunos matches ambiguos, no certifican roster oficial completo.
+Evidencia: informe de auditoría local: Werder, Lyon, Rennes, Milan y 29/36 UEL.
+Próximo QA: Conciliar plantel y técnico por club/temporada contra roster vigente.
+
+Borrador local; no creado en Jira.",High,Pendiente de triage,"D90-qa-draft,high,open-follow-up",Planteles,,,
+Bug,D90-QA-016 · Clic desde plantel no abría ficha,"ID local: D90-QA-016
+Área: Jugadores
+Riesgo QA: Medio
+Estado evidenciado: Corregido según historial
+
+Síntoma: Desde búsqueda funcionaba; desde plantilla de Manchester United no.
+Corrección/estado: Enlaces por identidad se propagaron a plantel y otras vistas.
+Evidencia: Solicitud del usuario y código ui/players.py.
+Próximo QA: Smoke test desde plantel, goleadores y búsqueda en todas las ligas.
+
+Borrador local; no creado en Jira.",Medium,Revisar evidencia,"D90-qa-draft,medium,needs-verification",Jugadores,,,
+Bug,"D90-QA-017 · Logos ausentes, rotos o equivocados","ID local: D90-QA-017
+Área: Escudos
+Riesgo QA: Medio
+Estado evidenciado: Activos corregidos parcialmente
+
+Síntoma: Varios clubes aparecían sin su escudo o con imagen incorrecta.
+Corrección/estado: Auditoría revisó 186 activos y corrigió varios; 137 históricos quedaron fuera.
+Evidencia: auditoría de escudos.
+Próximo QA: Inspección visual de cada escudo activo y fallback neutral.
+
+Borrador local; no creado en Jira.",Medium,Revisar evidencia,"D90-qa-draft,medium,needs-verification",Escudos,,,
+Bug,D90-QA-018 · Homónimos y nombres incompletos,"ID local: D90-QA-018
+Área: Búsqueda
+Riesgo QA: Medio
+Estado evidenciado: Parcial
+
+Síntoma: Resultados no siempre mostraban club/competición/nacionalidad con claridad.
+Corrección/estado: Se enriquecieron resultados y navegación de perfil.
+Evidencia: Solicitud sobre Lautaro y Lisandro Martínez.
+Próximo QA: Probar alias, acentos y homónimos con ID de destino correcto.
+
+Borrador local; no creado en Jira.",Medium,Pendiente de triage,"D90-qa-draft,medium,open-follow-up",Búsqueda,,,
+Bug,D90-QA-019 · Resumen vacío y formatos diferentes entre ligas/copas,"ID local: D90-QA-019
+Área: Equipos
+Riesgo QA: Medio
+Estado evidenciado: Retirada y replicación informadas
+
+Síntoma: La pestaña resumen no aportaba; UCL/UEL diferían de ligas.
+Corrección/estado: Se quitó resumen y se extendió el formato visual de Premier.
+Evidencia: Historial de solicitudes/ediciones de UI.
+Próximo QA: Comparar cada pestaña y competición lado a lado.
+
+Borrador local; no creado en Jira.",Medium,Pendiente de triage,"D90-qa-draft,medium,open-follow-up",Equipos,,,
+Bug,D90-QA-020 · Tablas anchas y porcentajes/nombres truncados,"ID local: D90-QA-020
+Área: Competiciones
+Riesgo QA: Medio
+Estado evidenciado: Ajustado iterativamente
+
+Síntoma: Columnas desproporcionadas reducían legibilidad de nombres y números.
+Corrección/estado: Se redistribuyeron anchos en Premier y luego otras ligas/copas.
+Evidencia: Capturas de durante las iteraciones
+Próximo QA: Probar textos largos, todos los formatos y resoluciones.
+
+Borrador local; no creado en Jira.",Medium,Revisar evidencia,"D90-qa-draft,medium,needs-verification",Competiciones,,,
+Bug,D90-QA-021 · Estadísticas de equipo recortaban porcentajes,"ID local: D90-QA-021
+Área: Equipos
+Riesgo QA: Medio
+Estado evidenciado: Ajustado; regresión parcial
+
+Síntoma: Nombre del equipo consumía ancho y porcentajes quedaban cortados.
+Corrección/estado: Se redujo columna equipo y se distribuyeron métricas.
+Evidencia: Captura Premier captura compartida y pedido de réplica.
+Próximo QA: Revisar nombres largos y todas las competiciones.
+
+Borrador local; no creado en Jira.",Medium,Revisar evidencia,"D90-qa-draft,medium,needs-verification",Equipos,,,
+Bug,D90-QA-022 · Córners/tarjetas estaban en tabla separada,"ID local: D90-QA-022
+Área: Equipos
+Riesgo QA: Medio
+Estado evidenciado: Formato consolidado
+
+Síntoma: La vista duplicaba secciones y ocultaba comparación conjunta.
+Corrección/estado: Se juntaron métricas en una tabla; desglose depende de eventos publicados.
+Evidencia: Solicitudes durante el proyecto; docs/providers.md.
+Próximo QA: Validar valores/nulos, local/visitante y promedios.
+
+Borrador local; no creado en Jira.",Medium,Revisar evidencia,"D90-qa-draft,medium,needs-verification",Equipos,,,
+Bug,D90-QA-023 · Fixture/calendario vacío o incompleto,"ID local: D90-QA-023
+Área: Equipos
+Riesgo QA: Alto
+Estado evidenciado: Parcial
+
+Síntoma: Pestaña de partidos/calendario carecía de datos esperados.
+Corrección/estado: Se cargó Premier y replicó formato, sujeto a actualizaciones por fuente.
+Evidencia: Historial y línea base de fixtures auditoría previa.
+Próximo QA: Reconciliar fixture por competición con organizador.
+
+Borrador local; no creado en Jira.",High,Pendiente de triage,"D90-qa-draft,high,open-follow-up",Equipos,,,
+Bug,D90-QA-024 · Resultado de victoria/empate/derrota sin color,"ID local: D90-QA-024
+Área: Equipos
+Riesgo QA: Medio
+Estado evidenciado: Corregido según confirmación del usuario
+
+Síntoma: Marcador no reflejaba la perspectiva del equipo local/visitante.
+Corrección/estado: Verde gana, amarillo empate, rojo pierde.
+Evidencia: Captura Arsenal revisión previa y confirmación posterior.
+Próximo QA: Probar inversión local/visitante, empate y todas las ligas.
+
+Borrador local; no creado en Jira.",Medium,Revisar evidencia,"D90-qa-draft,medium,needs-verification",Equipos,,,
+Bug,D90-QA-025 · Finalizados mostraban hora inicial,"ID local: D90-QA-025
+Área: Partidos
+Riesgo QA: Medio
+Estado evidenciado: Cambio aplicado, sin revalidar
+
+Síntoma: La hora se mantenía tras terminar el encuentro.
+Corrección/estado: Finalizado para partido terminado, En vivo durante juego, hora para futuro.
+Evidencia: Solicitud y código home/teams.
+Próximo QA: Probar estados y zona horaria desde datos reales.
+
+Borrador local; no creado en Jira.",Medium,Pendiente de triage,"D90-qa-draft,medium,open-follow-up",Partidos,,,
+Bug,D90-QA-026 · Tabla no aprovechaba el ancho,"ID local: D90-QA-026
+Área: Plantel
+Riesgo QA: Bajo
+Estado evidenciado: Ajustado según historial
+
+Síntoma: Texto pequeño y distribución desaprovechada; petición de evitar scroll.
+Corrección/estado: Se ajustó layout; planteles altos pueden necesitar scroll vertical.
+Evidencia: Solicitud captura compartida.
+Próximo QA: Probar alturas diferentes sin ocultar jugadores.
+
+Borrador local; no creado en Jira.",Low,Revisar evidencia,"D90-qa-draft,low,needs-verification",Plantel,,,
+Bug,D90-QA-027 · Nombres no completos o escudo no antecedía al nombre,"ID local: D90-QA-027
+Área: Equipos
+Riesgo QA: Medio
+Estado evidenciado: Ajustes globales solicitados
+
+Síntoma: En varias vistas se recortaba equipo o no aparecía escudo.
+Corrección/estado: Cargador común y ajuste de columnas.
+Evidencia: Auditoría de 186 activos; históricos incompletos.
+Próximo QA: Repasar tabla, partido, búsqueda, fixture, roster y ficha.
+
+Borrador local; no creado en Jira.",Medium,Pendiente de triage,"D90-qa-draft,medium,open-follow-up",Equipos,,,
+Bug,D90-QA-028 · Seleccionar liga devolvía al Inicio,"ID local: D90-QA-028
+Área: Navegación
+Riesgo QA: Medio
+Estado evidenciado: Corregido según historial
+
+Síntoma: Selector debía abrir ficha propia, no calendario global.
+Corrección/estado: Rutas Inicio/competición separadas y acceso de regreso global.
+Evidencia: Solicitud urgente y aperturas posteriores.
+Próximo QA: Probar Inicio→competición→equipo→Inicio y deep links.
+
+Borrador local; no creado en Jira.",Medium,Revisar evidencia,"D90-qa-draft,medium,needs-verification",Navegación,,,
+Bug,D90-QA-029 · Pantalla inicial abría Premier en lugar de calendario,"ID local: D90-QA-029
+Área: Inicio
+Riesgo QA: Medio
+Estado evidenciado: Rediseñada, datos sin revalidar
+
+Síntoma: Se pidió inicio como agenda global con fixture por liga.
+Corrección/estado: Se configuró calendario de seis días, fixture agrupado por competición.
+Evidencia: docs/web-preview.md e historial de UX.
+Próximo QA: Probar cambio de día, partido, zona horaria y día vacío.
+
+Borrador local; no creado en Jira.",Medium,Pendiente de triage,"D90-qa-draft,medium,open-follow-up",Inicio,,,
+Bug,D90-QA-030 · Marcadores tenían caja oscura no deseada,"ID local: D90-QA-030
+Área: Inicio
+Riesgo QA: Medio
+Estado evidenciado: Corregido según historial
+
+Síntoma: Fondo adicional detrás de los números no concordaba con tarjeta.
+Corrección/estado: Se retiró fondo y se conservó color semántico.
+Evidencia: Captura del captura compartida y cambio posterior.
+Próximo QA: Revisar inicio, rendimiento, tabla y fichas.
+
+Borrador local; no creado en Jira.",Medium,Revisar evidencia,"D90-qa-draft,medium,needs-verification",Inicio,,,
+Bug,D90-QA-031 · Fondo de Champions/Europa faltaba en tarjetas,"ID local: D90-QA-031
+Área: Inicio
+Riesgo QA: Medio
+Estado evidenciado: Corregido en iteración; HTML tuvo regresión
+
+Síntoma: Martes/miércoles no mostraban insignia de copa como fondo.
+Corrección/estado: Se restauró logo de competición y se volvió a ajustar la vista HTML.
+Evidencia: Peticiones del usuario captura compartida.
+Próximo QA: Comparar versión escritorio y HTML para cada fecha europea.
+
+Borrador local; no creado en Jira.",Medium,Revisar evidencia,"D90-qa-draft,medium,needs-verification",Inicio,,,
+Bug,D90-QA-032 · Selección destacada ignoraba partido prioritario,"ID local: D90-QA-032
+Área: Inicio
+Riesgo QA: Alto
+Estado evidenciado: Reglas ajustadas, no certificadas exhaustivamente
+
+Síntoma: Atlético–ManU o PSG–Barcelona debían superar cruces menos prioritarios.
+Corrección/estado: Se añadió jerarquía competición y clubes prioritarios/históricos.
+Evidencia: Casos reportados el captura compartida.
+Próximo QA: Pruebas oracle de simultaneidad, derby, sede invertida y copa.
+
+Borrador local; no creado en Jira.",High,Pendiente de triage,"D90-qa-draft,high,open-follow-up",Inicio,,,
+Bug,D90-QA-033 · Fixtures variaban y rompían orden local/V S/visitante,"ID local: D90-QA-033
+Área: Inicio
+Riesgo QA: Bajo
+Estado evidenciado: Ajustado iterativamente
+
+Síntoma: Nombres se apilaban y separación variaba entre clubes.
+Corrección/estado: Tarjetas centradas con escudos, local–VS–visitante y tres columnas.
+Evidencia: Historial de diseño de Inicio.
+Próximo QA: Probar pantallas pequeñas y nombres extensos.
+
+Borrador local; no creado en Jira.",Low,Revisar evidencia,"D90-qa-draft,low,needs-verification",Inicio,,,
+Bug,D90-QA-034 · League stage/Spieltag visibles,"ID local: D90-QA-034
+Área: Europa
+Riesgo QA: Bajo
+Estado evidenciado: Normalización aplicada según historial
+
+Síntoma: Etiquetas extranjeras aparecían en Champions y Europa.
+Corrección/estado: Etiqueta Jornada y número; también se ocultó regular_season.
+Evidencia: Solicitud contexto HTML, captura compartida.
+Próximo QA: Verificar liga/fase eliminatoria y rondas incompletas.
+
+Borrador local; no creado en Jira.",Low,Pendiente de triage,"D90-qa-draft,low,open-follow-up",Europa,,,
+Bug,D90-QA-035 · HTML enviado por WhatsApp se abrió sin estilos,"ID local: D90-QA-035
+Área: HTML móvil
+Riesgo QA: Medio
+Estado evidenciado: Corrección parcial, sin prueba en dispositivo
+
+Síntoma: Chrome móvil mostró estilo por defecto y texto lineal.
+Corrección/estado: Se preparó exportación standalone; escudos externos pueden requerir internet.
+Evidencia: Captura del captura compartida; scripts/export_shareable_html.py.
+Próximo QA: Probar archivo transferido por WhatsApp en móvil y sin conexión.
+
+Borrador local; no creado en Jira.",Medium,Pendiente de triage,"D90-qa-draft,medium,open-follow-up",HTML móvil,,,
+Bug,D90-QA-036 · Ejecutable y HTML no coincidían,"ID local: D90-QA-036
+Área: Paridad
+Riesgo QA: Alto
+Estado evidenciado: Paridad parcial, no certificada
+
+Síntoma: Diferían distribución de tablas/fondos y el usuario detectó desfases.
+Corrección/estado: La aplicación de escritorio pasó a alojar vista web y se iteró CSS.
+Evidencia: Historial captura compartida; docs/web-preview.md.
+Próximo QA: Capturas comparables de todas las pantallas/estados.
+
+Borrador local; no creado en Jira.",High,Pendiente de triage,"D90-qa-draft,high,open-follow-up",Paridad,,,
+Task,D90-QA-037 · URL 127.0.0.1 no es accesible a testers externos,"ID local: D90-QA-037
+Área: Distribución web
+Riesgo QA: Alto
+Estado evidenciado: Despliegue pendiente
+
+Síntoma: Localhost solo abre en la propia PC; archivo exportado no entrega datos vivos.
+Corrección/estado: Se documentó hosting con base controlada, HTTPS, login y usuario SELECT.
+Evidencia: docs/web-preview.md.
+Próximo QA: Preparar staging protegido antes de distribuir enlace.
+
+Borrador local; no creado en Jira.",High,Pendiente de triage,"D90-qa-draft,high,open-follow-up",Distribución web,,,
+Bug,D90-QA-038 · Dato ausente podía confundirse con 0 real,"ID local: D90-QA-038
+Área: Nulos
+Riesgo QA: Alto
+Estado evidenciado: Protecciones parciales
+
+Síntoma: Un campo sin fuente podía parecer estadística deportiva cero.
+Corrección/estado: Importadores preservan nulos y documentación prohíbe inventar resultados.
+Evidencia: Auditoría auditoría previa y docs/providers.md.
+Próximo QA: Buscar default 0 en importación, agregados y UI.
+
+Borrador local; no creado en Jira.",High,Pendiente de triage,"D90-qa-draft,high,open-follow-up",Nulos,,,
+Task,D90-QA-039 · Fuente gratuita no implica licencia ni actualidad,"ID local: D90-QA-039
+Área: Proveedores
+Riesgo QA: Alto
+Estado evidenciado: Restricciones documentadas
+
+Síntoma: Cuotas, términos y frescura pueden impedir extracción o redistribución.
+Corrección/estado: Se excluyeron fuentes con scraping prohibido y se documentaron límites.
+Evidencia: docs/providers.md y docs/licenses-and-attribution.md.
+Próximo QA: Revisar licencia/atribución y almacenar procedencia por dato.
+
+Borrador local; no creado en Jira.",High,Pendiente de triage,"D90-qa-draft,high,open-follow-up",Proveedores,,,
+Bug,D90-QA-040 · Inter y otros clubes seguían incompletos,"ID local: D90-QA-040
+Área: Cobertura de clubes
+Riesgo QA: Alto
+Estado evidenciado: Estado actual no verificado
+
+Síntoma: Importancia del club no garantiza que proveedores publiquen cada estadística.
+Corrección/estado: Se agregaron fuentes partido a partido; nulos quedan pendientes.
+Evidencia: Solicitud del usuario y docs/providers.md.
+Próximo QA: Medir cobertura por equipo/campo y comparar partidos finalizados.
+
+Borrador local; no creado en Jira.",High,Pendiente de triage,"D90-qa-draft,high,open-follow-up",Cobertura de clubes,,,
+Task,D90-QA-041 · Declarar todo completo excedía evidencia,"ID local: D90-QA-041
+Área: Proceso QA
+Riesgo QA: Alto
+Estado evidenciado: Riesgo de proceso abierto
+
+Síntoma: Tras declaraciones de carga aparecieron campos vacíos y cobertura parcial.
+Corrección/estado: Auditoría auditoría previa aportó línea base; posteriores cargas sin reporte consolidado.
+Evidencia: Contraste de auditoría y mensajes posteriores.
+Próximo QA: Criterios de cierre por competición/campo, con fecha y evidencia.
+
+Borrador local; no creado en Jira.",High,Pendiente de triage,"D90-qa-draft,high,open-follow-up",Proceso QA,,,
+Bug,D90-QA-042 · Rendimiento del equipo tenía poco contenido y mucho espacio vacío,"ID local: D90-QA-042
+Área: equipos
+Riesgo QA: Medio
+Estado evidenciado: Revisar evidencia
+
+La pestaña Rendimiento mostraba pocas líneas estadísticas y dejaba gran parte de la pantalla vacía. Se modernizó primero en Premier y luego se replicó; falta regresión visual por competición. Captura incluida en el caso del reporte.
+
+Borrador local; no creado en Jira.",Medium,Revisar evidencia,"D90-qa-draft,medio,needs-verification",equipos,,,
+Bug,D90-QA-043 · Fondo azul oscuro no deseado en goles por partido,"ID local: D90-QA-043
+Área: equipos
+Riesgo QA: Medio
+Estado evidenciado: Revisar evidencia
+
+La tarjeta Goles por partido mostraba fondo azul oscuro detrás de los valores. Se solicitó fondo natural y goles a favor en verde; falta confirmar en todos los equipos. Captura incluida en el reporte.
+
+Borrador local; no creado en Jira.",Medium,Revisar evidencia,"D90-qa-draft,medio,needs-verification",equipos,,,
+Bug,D90-QA-044 · Historial de partidos alejaba demasiado fecha y rival,"ID local: D90-QA-044
+Área: partidos
+Riesgo QA: Bajo
+Estado evidenciado: Revisar evidencia
+
+Columnas de contexto dejaban distancia entre fecha y rival y comprimían el resto. Se ajustó según historial; falta revisar nombres largos y todas las ligas. Captura incluida en el reporte.
+
+Borrador local; no creado en Jira.",Low,Revisar evidencia,"D90-qa-draft,bajo,needs-verification",partidos,,,
+Bug,D90-QA-045 · Fondo gris no deseado detrás de nombres de rivales,"ID local: D90-QA-045
+Área: calendario
+Riesgo QA: Medio
+Estado evidenciado: Revisar evidencia
+
+Rectángulos grises detrás de los rivales rompían el estilo oscuro del calendario de equipo. Se solicitó retirarlos; falta regresión en todas las competiciones. Captura incluida en el reporte.
+
+Borrador local; no creado en Jira.",Medium,Revisar evidencia,"D90-qa-draft,medio,needs-verification",calendario,,,

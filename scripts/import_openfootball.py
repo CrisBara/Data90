@@ -5,23 +5,23 @@ from datetime import UTC, datetime
 
 from sqlalchemy import select
 
-from football_analytics.database.models import (
+from data90.database.models import (
     Competition,
     DataSource,
     SourceCompetition,
     SyncRun,
     SyncRunItem,
 )
-from football_analytics.database.session import make_engine, make_session_factory
-from football_analytics.domain.dto import NormalizedSeason
-from football_analytics.domain.enums import SyncMode, SyncStatus
-from football_analytics.domain.exceptions import EntityResolutionError
-from football_analytics.providers.openfootball import (
+from data90.database.session import make_engine, make_session_factory
+from data90.domain.dto import NormalizedSeason
+from data90.domain.enums import SyncMode, SyncStatus
+from data90.domain.exceptions import EntityResolutionError
+from data90.providers.openfootball import (
     COMPETITION_TIMEZONES,
     OpenFootballProvider,
 )
-from football_analytics.repositories.catalog import upsert_competition_season, upsert_team
-from football_analytics.repositories.match_sync import upsert_match
+from data90.repositories.catalog import upsert_competition_season, upsert_team
+from data90.repositories.match_sync import upsert_match
 
 
 def main() -> int:

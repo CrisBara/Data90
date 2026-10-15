@@ -3,8 +3,8 @@ from datetime import date
 from sqlalchemy import create_engine, select
 from sqlalchemy.orm import Session
 
-from football_analytics.database.base import Base
-from football_analytics.database.models import (
+from data90.database.base import Base
+from data90.database.models import (
     Competition,
     CompetitionSeason,
     DataSource,
@@ -14,8 +14,8 @@ from football_analytics.database.models import (
     Team,
     TeamAlias,
 )
-from football_analytics.domain.dto import NormalizedSeason, NormalizedTeam
-from football_analytics.repositories.catalog import upsert_competition_season, upsert_team
+from data90.domain.dto import NormalizedSeason, NormalizedTeam
+from data90.repositories.catalog import upsert_competition_season, upsert_team
 
 
 def _session() -> Session:

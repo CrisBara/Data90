@@ -14,21 +14,21 @@ from zoneinfo import ZoneInfo
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
-from football_analytics.config.featured_match_priority import (  # noqa: E402
+from data90.config.featured_match_priority import (  # noqa: E402
     FEATURED_COMPETITION_PRIORITY,
     featured_match_key,
     normalize_team_name,
 )
-from football_analytics.config.settings import get_settings  # noqa: E402
-from football_analytics.database.models import Team  # noqa: E402
-from football_analytics.database.session import make_engine, make_session_factory  # noqa: E402
-from football_analytics.repositories.players import (  # noqa: E402
+from data90.config.settings import get_settings  # noqa: E402
+from data90.database.models import Team  # noqa: E402
+from data90.database.session import make_engine, make_session_factory  # noqa: E402
+from data90.repositories.players import (  # noqa: E402
     player_profile_detail,
     player_roster_for_competition_season,
 )
-from football_analytics.services.competition_service import CompetitionService  # noqa: E402
-from football_analytics.services.featured_match_policy import featured_match_policy  # noqa: E402
-from football_analytics.web import (  # noqa: E402
+from data90.services.competition_service import CompetitionService  # noqa: E402
+from data90.services.featured_match_policy import featured_match_policy  # noqa: E402
+from data90.web import (  # noqa: E402
     _apply_verified_crests,
     _competition_detail,
     _home_data,
@@ -190,11 +190,11 @@ def main() -> int:
                 "competition_priority": list(FEATURED_COMPETITION_PRIORITY),
             }))
 
-        html = (ROOT / "src/football_analytics/ui/web/index.html").read_text(encoding="utf-8")
-        logo_svg = (ROOT / "src/football_analytics/ui/web/data90-mark.svg").read_text(
+        html = (ROOT / "src/data90/ui/web/index.html").read_text(encoding="utf-8")
+        logo_svg = (ROOT / "src/data90/ui/web/data90-mark.svg").read_text(
             encoding="utf-8"
         )
-        full_logo_svg = (ROOT / "src/football_analytics/ui/web/data90-logo-full.svg").read_text(
+        full_logo_svg = (ROOT / "src/data90/ui/web/data90-logo-full.svg").read_text(
             encoding="utf-8"
         )
         logo_data_uri = (
@@ -217,8 +217,8 @@ def main() -> int:
             '    </script>\n',
             "",
         )
-        css = (ROOT / "src/football_analytics/ui/web/app.css").read_text(encoding="utf-8")
-        js = (ROOT / "src/football_analytics/ui/web/app.js").read_text(encoding="utf-8")
+        css = (ROOT / "src/data90/ui/web/app.css").read_text(encoding="utf-8")
+        js = (ROOT / "src/data90/ui/web/app.js").read_text(encoding="utf-8")
         html = html.replace('<link rel="stylesheet" href="/assets/app.css">', f'<style id="offline-style">{css}</style>')
         html = html.replace('<script src="/assets/app.js" defer></script>', '')
         html = html.replace(
@@ -243,7 +243,7 @@ def main() -> int:
         html = html.replace('<footer class="app-footer"><span>Data90</span><span>Datos de las fuentes configuradas en la aplicación</span></footer>',
             f'<footer class="app-footer"><span>Data90 · Copia descargable de solo lectura</span><span>Datos exportados {bundle["exported_at"]} · Los escudos y logos requieren conexión a internet</span></footer>')
         shim = r"""
-  const OFFLINE = JSON.parse(document.getElementById("fap-export-data").textContent);
+  const OFFLINE = JSON.parse(document.getElementById("D90-export-data").textContent);
   function offlineHome(requested) {
     const base = new Date(`${requested}T12:00:00-03:00`);
     const dateKey = date => new Intl.DateTimeFormat("en-CA", {timeZone: OFFLINE.timezone, year:"numeric",month:"2-digit",day:"2-digit"}).format(date);
@@ -297,7 +297,7 @@ def main() -> int:
         js = js[:start] + "  async function api(path) { return offlineApi(path); }" + js[end:]
         embedded_data = json.dumps(bundle, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/")
         html = html.replace("</body>",
-            f'<script id="fap-export-data" type="application/json">{embedded_data}</script>\n<script>{js}</script>\n</body>')
+            f'<script id="D90-export-data" type="application/json">{embedded_data}</script>\n<script>{js}</script>\n</body>')
         output_dir = ROOT / "dist" / "share"
         output_dir.mkdir(parents=True, exist_ok=True)
         outputs = [

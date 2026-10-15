@@ -15,8 +15,8 @@ from uuid import UUID
 import requests
 from sqlalchemy import select
 
-from football_analytics.database.session import make_engine, make_session_factory
-from football_analytics.database.models import (
+from data90.database.session import make_engine, make_session_factory
+from data90.database.models import (
     Competition,
     CompetitionSeason,
     DataSource,
@@ -32,9 +32,9 @@ from football_analytics.database.models import (
     TeamAlias,
     TeamCoach,
 )
-from football_analytics.domain.enums import SyncMode, SyncStatus
-from football_analytics.repositories.players import team_squad_for_team
-from football_analytics.sync.normalizer import normalize_name
+from data90.domain.enums import SyncMode, SyncStatus
+from data90.repositories.players import team_squad_for_team
+from data90.sync.normalizer import normalize_name
 
 
 SOURCE_CODE = "wikidata"
@@ -61,7 +61,7 @@ class Wikidata:
     def __init__(self) -> None:
         self.session = requests.Session()
         self.session.headers.update(
-            {"User-Agent": "FootballAnalyticsPro/1.0 (desktop football data enrichment)"}
+            {"User-Agent": "Data90/1.0 (desktop football data enrichment)"}
         )
         self.requests = 0
         self._last_request = 0.0

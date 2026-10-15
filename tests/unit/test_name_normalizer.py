@@ -1,4 +1,4 @@
-from football_analytics.sync.normalizer import normalize_name
+from data90.sync.normalizer import normalize_name
 
 
 def test_name_normalization_is_accent_and_case_insensitive() -> None:

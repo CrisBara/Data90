@@ -3,9 +3,9 @@ from logging.config import fileConfig
 from alembic import context
 from sqlalchemy import engine_from_config, pool
 
-import football_analytics.database.models  # noqa: F401
-from football_analytics.config.settings import get_settings
-from football_analytics.database.base import Base
+import data90.database.models  # noqa: F401
+from data90.config.settings import get_settings
+from data90.database.base import Base
 
 config = context.config
 if config.config_file_name is not None:

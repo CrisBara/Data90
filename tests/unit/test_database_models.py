@@ -1,5 +1,5 @@
-import football_analytics.database.models  # noqa: F401
-from football_analytics.database.base import Base
+import data90.database.models  # noqa: F401
+from data90.database.base import Base
 
 
 def test_initial_schema_registers_expected_tables() -> None:

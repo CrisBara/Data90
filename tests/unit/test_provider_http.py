@@ -2,8 +2,8 @@ import json
 
 import requests
 
-from football_analytics.domain.exceptions import ProviderAuthenticationError
-from football_analytics.providers.base import HttpProvider
+from data90.domain.exceptions import ProviderAuthenticationError
+from data90.providers.base import HttpProvider
 
 
 class FixtureResponse(requests.Response):

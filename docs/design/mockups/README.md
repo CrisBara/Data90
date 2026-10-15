@@ -1,4 +1,4 @@
-# Propuestas visuales de Football Analytics Pro
+# Propuestas visuales de Data 90
 
 ## Nuevas direcciones modernas
 

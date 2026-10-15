@@ -2,9 +2,9 @@ from datetime import UTC, datetime
 
 import pytest
 
-from football_analytics.domain.enums import MatchStatus
-from football_analytics.domain.exceptions import ProviderError
-from football_analytics.providers.openfootball import OpenFootballProvider
+from data90.domain.enums import MatchStatus
+from data90.domain.exceptions import ProviderError
+from data90.providers.openfootball import OpenFootballProvider
 
 
 def test_openfootball_normalizes_local_kickoff_and_result(monkeypatch: pytest.MonkeyPatch) -> None:

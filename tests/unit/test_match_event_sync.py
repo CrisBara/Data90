@@ -3,8 +3,8 @@ from datetime import UTC, datetime
 from sqlalchemy import create_engine, func, select
 from sqlalchemy.orm import Session, sessionmaker
 
-from football_analytics.database.base import Base
-from football_analytics.database.models import (
+from data90.database.base import Base
+from data90.database.models import (
     Competition,
     CompetitionSeason,
     DataSource,
@@ -14,9 +14,9 @@ from football_analytics.database.models import (
     SourceCompetitionSeason,
     Team,
 )
-from football_analytics.domain.enums import SyncStatus
-from football_analytics.providers.openligadb import OpenLigaDBProvider
-from football_analytics.services.match_event_sync import sync_match_goal_events
+from data90.domain.enums import SyncStatus
+from data90.providers.openligadb import OpenLigaDBProvider
+from data90.services.match_event_sync import sync_match_goal_events
 
 
 class GoalEventFixture(OpenLigaDBProvider):

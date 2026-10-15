@@ -2,8 +2,8 @@
 
 import argparse
 
-from football_analytics.database.session import make_engine, make_session_factory
-from football_analytics.services.match_event_sync import sync_match_goal_events
+from data90.database.session import make_engine, make_session_factory
+from data90.services.match_event_sync import sync_match_goal_events
 
 
 def main() -> int:

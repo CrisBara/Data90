@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#07111b">
-  <title>Football Analytics Pro — conceptos web dark</title>
+  <title>Data 90 — conceptos web dark</title>
   <style>
     :root { color-scheme: dark; font-family: Inter, "Segoe UI", system-ui, sans-serif; }
     * { box-sizing: border-box; }
@@ -209,7 +209,7 @@
 </head>
 <body>
   <main class="gallery">
-    <header class="intro"><div><p class="eyebrow">Football Analytics Pro · propuesta elegida</p><h1>Pizarra híbrida · control + blueprint</h1><p>Composición de control con agenda y resumen en dos columnas, combinada con la retícula táctica, las cifras técnicas y las líneas de blueprint. Inicio, calendario, competición, equipo y búsqueda comparten el mismo lenguaje visual.</p></div><span class="sample">DARK · DATOS DE MUESTRA</span></header>
+    <header class="intro"><div><p class="eyebrow">Data 90 · propuesta elegida</p><h1>Pizarra híbrida · control + blueprint</h1><p>Composición de control con agenda y resumen en dos columnas, combinada con la retícula táctica, las cifras técnicas y las líneas de blueprint. Inicio, calendario, competición, equipo y búsqueda comparten el mismo lenguaje visual.</p></div><span class="sample">DARK · DATOS DE MUESTRA</span></header>
     <section class="concepts">
       <button class="concept" data-theme-choice="hybrid" aria-pressed="true"><b>Híbrido · 01 + 03</b><span>Agenda premium, retícula sutil, tabla técnica y cifras monoespaciadas.</span></button>
       <button class="concept" data-theme-choice="control" aria-pressed="false"><b>01 · Pizarra de control</b><span>Dashboard ágil, calendario semanal por días y panel lateral de seguimiento.</span></button>
@@ -243,7 +243,7 @@
     const crest=(key)=>`<img src="${clubs[key].crest}" alt="Escudo de ${clubs[key].name}" onerror="this.replaceWith(Object.assign(document.createElement('span'),{textContent:'escudo pendiente',className:'card-meta'}))">`;
     const club=(key)=>`<span class="club">${crest(key)}<span>${clubs[key].name}</span></span>`;
     const nav=(key,icon,label)=>`<button class="nav-item ${screen===key?'active':''}" data-nav="${key}"><span class="nav-icon">${icon}</span><span class="nav-label">${label}</span></button>`;
-    function header(){return `<header class="topbar"><button class="menu-toggle" id="toggle" aria-label="Abrir menú lateral">☰</button><div class="brand"><span class="brand-mark">FAP</span><span><span class="brand-name">Football Analytics Pro</span><span class="brand-caption">ANÁLISIS · TEMPORADA 26/27</span></span></div><div class="search" id="searchOpen"><span>⌕</span><span>Buscar jugador o equipo…</span><small class="search-key">Ctrl K</small></div><span class="user-chip">BA</span></header>`;}
+    function header(){return `<header class="topbar"><button class="menu-toggle" id="toggle" aria-label="Abrir menú lateral">☰</button><div class="brand"><span class="brand-mark">D90</span><span><span class="brand-name">Data 90</span><span class="brand-caption">ANÁLISIS · TEMPORADA 26/27</span></span></div><div class="search" id="searchOpen"><span>⌕</span><span>Buscar jugador o equipo…</span><small class="search-key">Ctrl K</small></div><span class="user-chip">BA</span></header>`;}
     function shell(body){return `${header()}<div class="layout"><aside class="sidebar"><div class="side-heading">Seguimiento</div>${nav('home','◫','Inicio')}${nav('calendar','▦','Calendario')}${nav('competition','◷','Competiciones')}${nav('statistics','▤','Estadísticas')}<div class="season-card"><b>2026 / 27</b><br>8 competiciones<br>Actualizado · 08:00</div></aside><main class="content">${body}</main></div>`;}
     function pageHead(kicker,title,sub,filter='TEMPORADA 26/27'){return `<header class="page-head"><div><div class="kicker">${kicker}</div><h2>${title}</h2><p class="sub">${sub}</p></div><button class="filter">${filter}　⌄</button></header>`;}
     function table(rows,home=false){return `<table class="table"><thead><tr><th>Pts</th><th>#</th><th>Club</th><th>PJ</th><th>GF</th><th>GC</th><th>DG</th><th>Forma</th></tr></thead><tbody>${rows.map((r,i)=>`<tr><td class="pts">${r[1]}</td><td class="center">0${i+1}</td><td>${club(r[0])}</td><td class="center">${r[5]}</td><td class="center gf">${r[3]}</td><td class="center gc">${r[4]}</td><td class="center ${r[3]-r[4]>0?'gd-pos':r[3]-r[4]<0?'gd-neg':'gd-zero'}">${r[3]-r[4]>0?'+':''}${r[3]-r[4]}</td><td><span class="form"><i class="win">V</i><i class="win">V</i><i class="draw">E</i><i class="win">V</i><i class="loss">D</i></span></td></tr>`).join('')}</tbody></table>`;}

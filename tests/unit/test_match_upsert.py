@@ -4,8 +4,8 @@ from datetime import UTC, datetime
 from sqlalchemy import create_engine, select
 from sqlalchemy.orm import Session
 
-from football_analytics.database.base import Base
-from football_analytics.database.models import (
+from data90.database.base import Base
+from data90.database.models import (
     Competition,
     CompetitionSeason,
     DataQualityIssue,
@@ -15,9 +15,9 @@ from football_analytics.database.models import (
     SourceMatch,
     Team,
 )
-from football_analytics.domain.dto import NormalizedMatch
-from football_analytics.domain.enums import MatchStatus
-from football_analytics.repositories.match_sync import upsert_match
+from data90.domain.dto import NormalizedMatch
+from data90.domain.enums import MatchStatus
+from data90.repositories.match_sync import upsert_match
 
 
 def _dto(**changes: object) -> NormalizedMatch:

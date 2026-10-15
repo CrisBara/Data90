@@ -3,8 +3,8 @@ from datetime import UTC, datetime
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from football_analytics.database.base import Base
-from football_analytics.database.models import (
+from data90.database.base import Base
+from data90.database.models import (
     Competition,
     CompetitionSeason,
     DataSource,
@@ -14,7 +14,7 @@ from football_analytics.database.models import (
     StandingsSnapshot,
     Team,
 )
-from football_analytics.repositories.competitions import (
+from data90.repositories.competitions import (
     competition_list,
     competition_seasons,
     matches_for_competition_season,

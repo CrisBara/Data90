@@ -7,38 +7,38 @@ from datetime import UTC, datetime, timedelta
 from types import SimpleNamespace
 from zoneinfo import ZoneInfo
 
-from football_analytics.config.constants import COMPETITIONS
-from football_analytics.config.paths import project_root
-from football_analytics.config.settings import get_settings
-from football_analytics.database.session import make_engine, make_session_factory
-from football_analytics.domain.enums import SyncMode
-from football_analytics.providers.espn import ESPNProvider
-from football_analytics.providers.football_data import FootballDataProvider
-from football_analytics.providers.openligadb import OpenLigaDBProvider
-from football_analytics.services.api_football_player_sync import sync_api_football_players
-from football_analytics.services.eredivisie_fantasy_sync import sync_eredivisie_fantasy_players
-from football_analytics.services.espn_match_statistics_sync import sync_espn_match_statistics
-from football_analytics.services.espn_player_roster_sync import sync_espn_player_rosters
-from football_analytics.services.football_data_squad_sync import sync_current_football_data_squads
-from football_analytics.services.football_data_uk_sync import sync_football_data_uk_statistics
-from football_analytics.services.highlightly_match_sync import sync_highlightly_match_statistics
-from football_analytics.services.match_event_sync import sync_match_goal_events
-from football_analytics.services.pitchapi_match_sync import sync_pitchapi_match_statistics
-from football_analytics.services.player_sync import sync_player_statistics
-from football_analytics.services.promiedos_match_sync import sync_promiedos_match_fixtures
-from football_analytics.services.promiedos_sync import (
+from data90.config.constants import COMPETITIONS
+from data90.config.paths import project_root
+from data90.config.settings import get_settings
+from data90.database.session import make_engine, make_session_factory
+from data90.domain.enums import SyncMode
+from data90.providers.espn import ESPNProvider
+from data90.providers.football_data import FootballDataProvider
+from data90.providers.openligadb import OpenLigaDBProvider
+from data90.services.api_football_player_sync import sync_api_football_players
+from data90.services.eredivisie_fantasy_sync import sync_eredivisie_fantasy_players
+from data90.services.espn_match_statistics_sync import sync_espn_match_statistics
+from data90.services.espn_player_roster_sync import sync_espn_player_rosters
+from data90.services.football_data_squad_sync import sync_current_football_data_squads
+from data90.services.football_data_uk_sync import sync_football_data_uk_statistics
+from data90.services.highlightly_match_sync import sync_highlightly_match_statistics
+from data90.services.match_event_sync import sync_match_goal_events
+from data90.services.pitchapi_match_sync import sync_pitchapi_match_statistics
+from data90.services.player_sync import sync_player_statistics
+from data90.services.promiedos_match_sync import sync_promiedos_match_fixtures
+from data90.services.promiedos_sync import (
     PROMIEDOS_LEAGUE_IDS,
     sync_promiedos_player_statistics,
 )
-from football_analytics.services.promiedos_team_statistics_sync import (
+from data90.services.promiedos_team_statistics_sync import (
     PROMIEDOS_TEAM_STATS_ROUTES,
     sync_promiedos_team_statistics,
 )
-from football_analytics.services.resilient_sync import run_resilient_phase
-from football_analytics.services.sync_process_lock import SyncProcessLock
-from football_analytics.services.sync_scope import competitions_with_matches_on_date
-from football_analytics.services.thesportsdb_profile_sync import sync_thesportsdb_profiles
-from football_analytics.sync.orchestrator import run_sync
+from data90.services.resilient_sync import run_resilient_phase
+from data90.services.sync_process_lock import SyncProcessLock
+from data90.services.sync_scope import competitions_with_matches_on_date
+from data90.services.thesportsdb_profile_sync import sync_thesportsdb_profiles
+from data90.sync.orchestrator import run_sync
 
 
 def _run_sync() -> int:

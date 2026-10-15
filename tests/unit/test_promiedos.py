@@ -2,9 +2,9 @@ import json
 
 import requests
 
-from football_analytics.providers.eredivisie_fantasy import EredivisieFantasyProvider
-from football_analytics.providers.promiedos import PromiedosProvider
-from football_analytics.services.promiedos_sync import _player_totals
+from data90.providers.eredivisie_fantasy import EredivisieFantasyProvider
+from data90.providers.promiedos import PromiedosProvider
+from data90.services.promiedos_sync import _player_totals
 
 
 class FakeResponse(requests.Response):

@@ -3,8 +3,8 @@ from datetime import UTC, datetime
 from sqlalchemy import create_engine, func, select
 from sqlalchemy.orm import Session
 
-from football_analytics.database.base import Base
-from football_analytics.database.models import (
+from data90.database.base import Base
+from data90.database.models import (
     Competition,
     CompetitionSeason,
     DataSource,
@@ -17,8 +17,8 @@ from football_analytics.database.models import (
     SourcePlayer,
     Team,
 )
-from football_analytics.domain.dto import NormalizedPlayerSeasonStatistic
-from football_analytics.repositories.players import (
+from data90.domain.dto import NormalizedPlayerSeasonStatistic
+from data90.repositories.players import (
     _same_verified_player_name,
     goal_events_for_competition_season,
     player_profile_detail,

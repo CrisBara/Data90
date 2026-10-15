@@ -1,8 +1,8 @@
 """Import current-season team match statistics from free public CSV files."""
 
-from football_analytics.config.constants import COMPETITIONS
-from football_analytics.database.session import make_engine, make_session_factory
-from football_analytics.services.football_data_uk_sync import sync_football_data_uk_statistics
+from data90.config.constants import COMPETITIONS
+from data90.database.session import make_engine, make_session_factory
+from data90.services.football_data_uk_sync import sync_football_data_uk_statistics
 
 
 def main() -> int:

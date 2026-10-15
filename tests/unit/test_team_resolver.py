@@ -1,9 +1,9 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
 
-from football_analytics.database.base import Base
-from football_analytics.database.models import DataSource, SourceTeam, Team, TeamAlias
-from football_analytics.sync.resolver import resolve_team
+from data90.database.base import Base
+from data90.database.models import DataSource, SourceTeam, Team, TeamAlias
+from data90.sync.resolver import resolve_team
 
 
 def test_source_team_mapping_has_highest_priority() -> None:

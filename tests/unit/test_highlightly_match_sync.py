@@ -4,8 +4,8 @@ import pytest
 from sqlalchemy import create_engine, select
 from sqlalchemy.orm import sessionmaker
 
-from football_analytics.database.base import Base
-from football_analytics.database.models import (
+from data90.database.base import Base
+from data90.database.models import (
     AppSetting,
     Competition,
     CompetitionSeason,
@@ -19,7 +19,7 @@ from football_analytics.database.models import (
     Team,
     TeamAlias,
 )
-from football_analytics.services.highlightly_match_sync import (
+from data90.services.highlightly_match_sync import (
     DAILY_REQUEST_BUDGET,
     DailyQuotaReached,
     _reserve_daily_request,

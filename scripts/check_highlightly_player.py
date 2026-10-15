@@ -5,8 +5,8 @@ import json
 import sys
 from datetime import date
 
-from football_analytics.domain.exceptions import ProviderError
-from football_analytics.providers.highlightly import HighlightlyProvider
+from data90.domain.exceptions import ProviderError
+from data90.providers.highlightly import HighlightlyProvider
 
 
 def main() -> int:

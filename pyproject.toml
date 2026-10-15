@@ -22,8 +22,8 @@ dependencies = [
 ]
 
 [project.scripts]
-football-analytics = "football_analytics.main:main"
-football-analytics-web = "football_analytics.web:main"
+data90 = "data90.main:main"
+data90-web = "data90.web:main"
 
 [project.optional-dependencies]
 dev = ["pytest==8.4.1", "pytest-cov==6.2.1", "ruff==0.12.2"]
@@ -33,7 +33,7 @@ build = ["pyinstaller==6.22.3", "pyinstaller-hooks-contrib==2026.8"]
 where = ["src"]
 
 [tool.setuptools.package-data]
-football_analytics = ["ui/theme/*.qss", "ui/web/*.html", "ui/web/*.css", "ui/web/*.js", "ui/web/*.svg"]
+data90 = ["ui/theme/*.qss", "ui/web/*.html", "ui/web/*.css", "ui/web/*.js", "ui/web/*.svg"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

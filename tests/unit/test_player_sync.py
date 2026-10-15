@@ -1,8 +1,8 @@
 from sqlalchemy import create_engine, select
 from sqlalchemy.orm import Session, sessionmaker
 
-from football_analytics.database.base import Base
-from football_analytics.database.models import (
+from data90.database.base import Base
+from data90.database.models import (
     Competition,
     CompetitionSeason,
     DataSource,
@@ -11,10 +11,10 @@ from football_analytics.database.models import (
     SourceCompetitionSeason,
     SyncRunItem,
 )
-from football_analytics.domain.dto import NormalizedPlayerSeasonStatistic
-from football_analytics.domain.enums import SyncStatus
-from football_analytics.providers.openligadb import OpenLigaDBProvider
-from football_analytics.services.player_sync import sync_player_statistics
+from data90.domain.dto import NormalizedPlayerSeasonStatistic
+from data90.domain.enums import SyncStatus
+from data90.providers.openligadb import OpenLigaDBProvider
+from data90.services.player_sync import sync_player_statistics
 
 
 class GoalGetterFixture(OpenLigaDBProvider):

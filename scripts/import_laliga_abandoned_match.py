@@ -4,8 +4,8 @@ from datetime import UTC, datetime
 
 from sqlalchemy import select
 
-from football_analytics.config.constants import SOURCES
-from football_analytics.database.models import (
+from data90.config.constants import SOURCES
+from data90.database.models import (
     Competition,
     CompetitionSeason,
     DataSource,
@@ -15,7 +15,7 @@ from football_analytics.database.models import (
     SourceMatch,
     Team,
 )
-from football_analytics.database.session import make_engine, make_session_factory
+from data90.database.session import make_engine, make_session_factory
 
 OFFICIAL_MATCH_ID = "1_8579"
 OFFICIAL_MATCH_URL = (

@@ -11,7 +11,7 @@ Auditoría realizada el 8 de octubre de 2026 para el rediseño del Inicio y la v
 ## Catálogo más amplio
 
 - La base contiene equipos históricos y de copas además de los clubes activos de liga. Muchos registros antiguos no tienen URL de escudo; la interfaz muestra un marcador neutral y no lo presenta como oficial.
-- Las comprobaciones de carga de imágenes registran faltantes y errores en `%APPDATA%/Football Analytics Pro/team-crest-review.txt`.
+- Las comprobaciones de carga de imágenes registran faltantes y errores en `%APPDATA%/Data 90/team-crest-review.txt`.
 - En la revisión de carga aparecieron URLs no válidas para Bayer 04 Leverkusen y NK Celje. No se reemplazaron por imágenes no verificadas.
 - También faltaban logos de UEFA Europa League en el selector; se agregó el recurso `EL.png`, que es el código de logo documentado por football-data.org para esa competición.
 

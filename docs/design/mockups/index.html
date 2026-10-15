@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Football Analytics Pro — propuestas visuales</title>
+  <title>Data 90 — propuestas visuales</title>
   <style>
     :root { color-scheme: dark; font-family: "Segoe UI", Arial, sans-serif; }
     * { box-sizing: border-box; }
@@ -168,7 +168,7 @@
 <body>
   <main class="gallery">
     <header class="gallery-head">
-      <div><p class="eyebrow">Laboratorio visual · Football Analytics Pro</p><h1>Tres conceptos nuevos. Siempre dark.</h1><p class="intro">Descartamos la primera ronda. Estas propuestas exploran estructuras y ritmos distintos, no solo paletas oscuras. Recorré inicio, competición, equipo y búsqueda.</p></div>
+      <div><p class="eyebrow">Laboratorio visual · Data 90</p><h1>Tres conceptos nuevos. Siempre dark.</h1><p class="intro">Descartamos la primera ronda. Estas propuestas exploran estructuras y ritmos distintos, no solo paletas oscuras. Recorré inicio, competición, equipo y búsqueda.</p></div>
       <div class="demo-tag">VISTA DE DISEÑO · DATOS DE MUESTRA</div>
     </header>
     <section class="concepts" aria-label="Elegir propuesta">
@@ -178,7 +178,7 @@
     </section>
     <nav class="screen-controls" aria-label="Pantallas del mockup"><span class="label">VISTA</span><button class="screen-button" data-screen-choice="home" aria-pressed="true">Inicio</button><button class="screen-button" data-screen-choice="competition" aria-pressed="false">Competición</button><button class="screen-button" data-screen-choice="team" aria-pressed="false">Equipo</button><button class="screen-button" data-screen-choice="search" aria-pressed="false">Búsqueda</button></nav>
     <section class="window" aria-label="Vista previa de la aplicación de escritorio">
-      <div class="window-chrome"><i class="chrome-dot"></i><i class="chrome-dot"></i><i class="chrome-dot"></i><span class="chrome-title">Football Analytics Pro</span></div>
+      <div class="window-chrome"><i class="chrome-dot"></i><i class="chrome-dot"></i><i class="chrome-dot"></i><span class="chrome-title">Data 90</span></div>
       <div id="app" data-theme="control"></div>
     </section>
     <section class="design-notes" id="notes"></section>
@@ -207,7 +207,7 @@
     const club = (key, extra="") => `<span class="club ${extra}">${crest(key)}<span class="club-name">${clubs[key].name}</span></span>`;
     const link = (screen, glyph, label) => `<div class="side-link ${activeScreen===screen?'active':''}" data-nav="${screen}" title="${label}"><span class="glyph">${glyph}</span><span class="link-name">${label}</span></div>`;
     function shell(content) {
-      return `<header class="topbar"><button class="menu-toggle" id="menuToggle" aria-label="Contraer menú lateral">☰</button><div class="brand"><span class="brand-mark">FAP</span><span><span class="brand-name">Football Analytics Pro</span><span class="brand-sub">Datos que cuentan historias</span></span></div><div class="global-search"><span class="search-glyph">⌕</span><span>Buscar un equipo o jugador</span><span style="margin-left:auto">Ctrl K</span></div><span class="top-date">MIÉRCOLES · 7 OCT 2026</span><span class="avatar">BA</span></header><div class="app-body"><aside class="sidebar"><div class="side-label">Seguimiento</div>${link('home','◫','Inicio')}${link('competition','◷','Competiciones')}${link('statistics','▤','Estadísticas')}<div class="side-season"><b>Temporada activa</b><br>2026 / 27<br><span>8 competiciones</span></div></aside><main class="content">${content}</main></div>`;
+      return `<header class="topbar"><button class="menu-toggle" id="menuToggle" aria-label="Contraer menú lateral">☰</button><div class="brand"><span class="brand-mark">D90</span><span><span class="brand-name">Data 90</span><span class="brand-sub">Datos que cuentan historias</span></span></div><div class="global-search"><span class="search-glyph">⌕</span><span>Buscar un equipo o jugador</span><span style="margin-left:auto">Ctrl K</span></div><span class="top-date">MIÉRCOLES · 7 OCT 2026</span><span class="avatar">BA</span></header><div class="app-body"><aside class="sidebar"><div class="side-label">Seguimiento</div>${link('home','◫','Inicio')}${link('competition','◷','Competiciones')}${link('statistics','▤','Estadísticas')}<div class="side-season"><b>Temporada activa</b><br>2026 / 27<br><span>8 competiciones</span></div></aside><main class="content">${content}</main></div>`;
     }
     function head(kicker,title,subtitle,action='Temporada 2026 / 27') { return `<div class="view-head"><div><div class="kicker">${kicker}</div><h2 class="view-title">${title}</h2><p class="view-sub">${subtitle}</p></div><button class="control">${action}　⌄</button></div>`; }
     function home() {

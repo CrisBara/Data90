@@ -23,5 +23,5 @@ El catálogo histórico contiene clubes de otras temporadas. Una consulta de sol
 
 - Se contrastaron los identificadores de football-data.org en el catálogo local antes de construir sus URLs de escudo. La documentación oficial muestra el campo `crest` como URL de imagen del equipo.
 - Se comprobó que el módulo compila y que nueve nombres/variantes problemáticos resuelven a URLs HTTPS.
-- Se reconstruyó `dist/FootballAnalyticsPro/FootballAnalyticsPro.exe` con Python 3.14.7.
+- Se reconstruyó `dist/Data90/Data90.exe` con Python 3.14.7.
 - La verificación del aspecto final de cada imagen depende de que el proveedor de imágenes esté accesible desde el equipo cuando la app las solicita.

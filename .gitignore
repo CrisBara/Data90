@@ -14,7 +14,7 @@ cache/
 build/
 dist/
 *.spec
-!FootballAnalyticsPro.spec
+!Data90.spec
 .tmp/
 backups/
 .idea/

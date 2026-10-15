@@ -4,8 +4,8 @@ from __future__ import annotations
 
 import argparse
 
-from football_analytics.database.session import make_engine, make_session_factory
-from football_analytics.services.thesportsdb_profile_sync import sync_thesportsdb_profiles
+from data90.database.session import make_engine, make_session_factory
+from data90.services.thesportsdb_profile_sync import sync_thesportsdb_profiles
 
 
 def main() -> int:

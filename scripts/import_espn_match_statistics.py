@@ -1,8 +1,8 @@
 """Initial backfill of current-season match statistics for supported competitions."""
 
-from football_analytics.database.session import make_engine, make_session_factory
-from football_analytics.providers.espn import ESPNProvider
-from football_analytics.services.espn_match_statistics_sync import sync_espn_match_statistics
+from data90.database.session import make_engine, make_session_factory
+from data90.providers.espn import ESPNProvider
+from data90.services.espn_match_statistics_sync import sync_espn_match_statistics
 
 
 def main() -> int:

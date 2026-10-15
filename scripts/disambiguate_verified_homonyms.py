@@ -10,8 +10,8 @@ from pathlib import Path
 
 from sqlalchemy import select
 
-from football_analytics.database.models import Player
-from football_analytics.database.session import make_session_factory
+from data90.database.models import Player
+from data90.database.session import make_session_factory
 
 
 VERIFIED_NAMES = {

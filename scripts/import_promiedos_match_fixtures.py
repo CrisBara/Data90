@@ -2,10 +2,10 @@
 
 import argparse
 
-from football_analytics.config.constants import COMPETITIONS
-from football_analytics.database.session import make_engine, make_session_factory
-from football_analytics.providers.promiedos import PromiedosProvider
-from football_analytics.services.promiedos_match_sync import sync_promiedos_match_fixtures
+from data90.config.constants import COMPETITIONS
+from data90.database.session import make_engine, make_session_factory
+from data90.providers.promiedos import PromiedosProvider
+from data90.services.promiedos_match_sync import sync_promiedos_match_fixtures
 
 
 def main() -> int:

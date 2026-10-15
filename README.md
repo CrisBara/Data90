@@ -50,9 +50,9 @@ Para ampliar los goleadores históricos que OpenLigaDB publique: `python scripts
 
 Para importar los eventos de gol actuales de OpenLigaDB que se puedan asociar sin ambigüedad a partidos locales: `python scripts/import_openligadb_match_events.py --season-year 2026`. La pantalla Jugadores incluye la tabla de goles por partido cuando la fuente publica esos eventos.
 
-Para abrir la aplicación local: `python -m football_analytics`. Todas las pantallas consultan los datos locales; las llamadas a proveedores ocurren durante la actualización completa manual, la tarea diaria o bootstrap. La actualización manual ejecuta el mismo proceso que la tarea diaria, vuelve a consultar estadísticas individuales y guarda su registro en `logs/manual_sync.log`.
+Para abrir la aplicación local: `python -m data90`. Todas las pantallas consultan los datos locales; las llamadas a proveedores ocurren durante la actualización completa manual, la tarea diaria o bootstrap. La actualización manual ejecuta el mismo proceso que la tarea diaria, vuelve a consultar estadísticas individuales y guarda su registro en `logs/manual_sync.log`.
 
-Para abrir la vista web en esta PC, ejecuta `python -m football_analytics.web` y visita `http://127.0.0.1:8765`. No requiere Node.js ni modifica ni sincroniza la base. La vista web y sus requisitos para preparar un entorno de testers están en [docs/web-preview.md](docs/web-preview.md). El servidor de desarrollo queda limitado a la propia PC; no se publicó una URL.
+Para abrir la vista web en esta PC, ejecuta `python -m data90.web` y visita `http://127.0.0.1:8765`. No requiere Node.js ni modifica ni sincroniza la base. La vista web y sus requisitos para preparar un entorno de testers están en [docs/web-preview.md](docs/web-preview.md). El servidor de desarrollo queda limitado a la propia PC; no se publicó una URL.
 
 Para generar el paquete de Windows, ejecuta `powershell -ExecutionPolicy Bypass -File .\scripts\build_windows.ps1`. El ejecutable queda en `dist\Data90\Data90.exe`; mantené `.env` en la carpeta raíz del proyecto para que la aplicación encuentre las credenciales sin incluirlas en el paquete. PostgreSQL debe estar instalado y ejecutándose localmente.
 

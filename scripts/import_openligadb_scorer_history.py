@@ -5,22 +5,22 @@ from datetime import UTC, datetime
 
 from sqlalchemy import select
 
-from football_analytics.config.constants import COMPETITIONS
-from football_analytics.database.models import (
+from data90.config.constants import COMPETITIONS
+from data90.database.models import (
     Competition,
     DataSource,
     Season,
     SyncRun,
     SyncRunItem,
 )
-from football_analytics.database.session import make_engine, make_session_factory
-from football_analytics.domain.dto import NormalizedSeason
-from football_analytics.domain.enums import SyncMode, SyncStatus
-from football_analytics.domain.exceptions import ProviderError
-from football_analytics.providers.openligadb import OpenLigaDBProvider
-from football_analytics.repositories.catalog import upsert_competition_season
-from football_analytics.repositories.players import upsert_player_statistic
-from football_analytics.services.player_sync import LEAGUE_NAMES, _resolve_shortcut
+from data90.database.session import make_engine, make_session_factory
+from data90.domain.dto import NormalizedSeason
+from data90.domain.enums import SyncMode, SyncStatus
+from data90.domain.exceptions import ProviderError
+from data90.providers.openligadb import OpenLigaDBProvider
+from data90.repositories.catalog import upsert_competition_season
+from data90.repositories.players import upsert_player_statistic
+from data90.services.player_sync import LEAGUE_NAMES, _resolve_shortcut
 
 SCORER_COMPETITIONS = tuple(LEAGUE_NAMES)
 

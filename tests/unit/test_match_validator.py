@@ -2,9 +2,9 @@ from datetime import UTC, datetime
 
 import pytest
 
-from football_analytics.domain.dto import NormalizedMatch
-from football_analytics.domain.enums import MatchStatus
-from football_analytics.sync.validator import InvalidProviderRecord, validate_match
+from data90.domain.dto import NormalizedMatch
+from data90.domain.enums import MatchStatus
+from data90.sync.validator import InvalidProviderRecord, validate_match
 
 
 def _match(**changes: object) -> NormalizedMatch:

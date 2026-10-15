@@ -5,7 +5,7 @@ from alembic.migration import MigrationContext
 from alembic.operations import Operations
 from sqlalchemy import create_engine, inspect, text
 
-from football_analytics.database.base import Base
+from data90.database.base import Base
 
 MIGRATION_FILE = (
     Path(__file__).resolve().parents[2] / "alembic" / "versions" / "0002_match_query_indexes.py"

@@ -17,8 +17,8 @@ from typing import Any
 
 from sqlalchemy import inspect, select, text
 
-from football_analytics.config.settings import get_settings
-from football_analytics.database.models import (
+from data90.config.settings import get_settings
+from data90.database.models import (
     Match,
     MatchEvent,
     MatchTeamStatistic,
@@ -31,7 +31,7 @@ from football_analytics.database.models import (
     TeamCoach,
     TeamCompetitionSeasonStatistic,
 )
-from football_analytics.database.session import make_session_factory
+from data90.database.session import make_session_factory
 
 
 # Keep the canonical row with the broader source provenance (football-data.org
