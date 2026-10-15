@@ -19,14 +19,16 @@ from football_analytics.config.paths import is_frozen_build, project_root
 
 
 class SetupWizard(QDialog):
-    def __init__(self, *, token_configured: bool) -> None:
+    def __init__(
+        self, *, token_configured: bool, api_football_token_configured: bool = False
+    ) -> None:
         super().__init__()
-        self.setWindowTitle("Configuración inicial · Football Analytics Pro")
+        self.setWindowTitle("Configuración inicial · Data90")
         self.setMinimumWidth(640)
         self.setMinimumHeight(430)
 
         layout = QVBoxLayout(self)
-        layout.addWidget(QLabel("Puesta en marcha de Football Analytics Pro"))
+        layout.addWidget(QLabel("Puesta en marcha de Data90"))
         layout.addWidget(QLabel("1. PostgreSQL local: conectado"))
         token_message = (
             "2. Token de football-data.org: configurado"
@@ -37,6 +39,14 @@ class SetupWizard(QDialog):
         token_label = QLabel(token_message)
         token_label.setWordWrap(True)
         layout.addWidget(token_label)
+        api_message = (
+            "3. API-Football: clave configurada; habilita perfiles y planteles"
+            if api_football_token_configured
+            else "3. API-Football: sin clave; se omitirán perfiles y planteles"
+        )
+        api_label = QLabel(api_message)
+        api_label.setWordWrap(True)
+        layout.addWidget(api_label)
         instruction = QLabel(
             "El siguiente paso aplicará las migraciones, preparará los catálogos e intentará "
             "cargar los datos iniciales. Puede tardar varios minutos."

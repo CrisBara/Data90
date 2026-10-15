@@ -14,7 +14,7 @@ RETRYABLE_STATUS_CODES = {429, 500, 502, 503, 504}
 
 class ProviderRetryWait(wait_base):
     def __init__(self) -> None:
-        self.exponential = wait_exponential(multiplier=1, min=1, max=8)
+        self.exponential = wait_exponential(multiplier=2, min=2, max=120)
 
     def __call__(self, retry_state: Any) -> float:
         error = retry_state.outcome.exception() if retry_state.outcome else None
@@ -56,7 +56,7 @@ class HttpProvider:
 
     @retry(
         retry=retry_if_exception(_retryable_provider_error),
-        stop=stop_after_attempt(3),
+        stop=stop_after_attempt(10),
         wait=ProviderRetryWait(),
         reraise=True,
     )

@@ -29,6 +29,10 @@ class TeamMatchItem(NamedTuple):
     goals_against: int | None
     matchday: int | None
     stage: str | None
+    opponent_id: int
+    competition_season_id: int
+    round_label: str | None
+    opponent_crest_url: str | None = None
 
 
 def search_teams(
@@ -88,7 +92,15 @@ def search_teams(
     return [TeamListItem(*row) for row in session.execute(statement).all()]
 
 
-def team_match_history(session: Session, team_id: int) -> list[TeamMatchItem]:
+def team_match_history(
+    session: Session,
+    team_id: int,
+    *,
+    competition_season_id: int | None = None,
+    status: str | None = None,
+    limit: int | None = None,
+    upcoming: bool = False,
+) -> list[TeamMatchItem]:
     home = aliased(Team, name="home_team")
     away = aliased(Team, name="away_team")
     is_home = Match.home_team_id == team_id
@@ -104,6 +116,10 @@ def team_match_history(session: Session, team_id: int) -> list[TeamMatchItem]:
             case((is_home, Match.away_score_ft), else_=Match.home_score_ft),
             Match.matchday,
             Match.stage,
+            case((is_home, away.id), else_=home.id),
+            Match.competition_season_id,
+            Match.round_label,
+            case((is_home, away.crest_url), else_=home.crest_url),
         )
         .join(home, Match.home_team_id == home.id)
         .join(away, Match.away_team_id == away.id)
@@ -111,6 +127,13 @@ def team_match_history(session: Session, team_id: int) -> list[TeamMatchItem]:
         .join(Competition, Competition.id == CompetitionSeason.competition_id)
         .join(Season, Season.id == CompetitionSeason.season_id)
         .where(is_home | (Match.away_team_id == team_id))
-        .order_by(Match.kickoff_utc.desc())
+        .order_by(Match.kickoff_utc.asc() if upcoming else Match.kickoff_utc.desc())
     ).all()
+    if competition_season_id is not None:
+        # Projection index 11 is competition_season_id; row[-2] is round_label.
+        rows = [row for row in rows if row[11] == competition_season_id]
+    if status is not None:
+        rows = [row for row in rows if row[5] == status]
+    if limit is not None:
+        rows = rows[:limit]
     return [TeamMatchItem(*row) for row in rows]

@@ -21,6 +21,10 @@ class MatchListItem(NamedTuple):
     away_score_ft: int | None
     matchday: int | None
     stage: str | None
+    home_team_id: int
+    away_team_id: int
+    home_crest_url: str | None = None
+    away_crest_url: str | None = None
 
 
 def matches_for_local_date(
@@ -51,6 +55,10 @@ def matches_for_local_date(
             Match.away_score_ft,
             Match.matchday,
             Match.stage,
+            Match.home_team_id,
+            Match.away_team_id,
+            home_team.crest_url,
+            away_team.crest_url,
         )
         .join(CompetitionSeason, Match.competition_season_id == CompetitionSeason.id)
         .join(Competition, CompetitionSeason.competition_id == Competition.id)
@@ -82,6 +90,10 @@ def matches_for_local_date(
                 row[9],
                 row[10],
                 row[11],
+                row[12],
+                row[13],
+                row[14],
+                row[15],
             )
         )
     return results

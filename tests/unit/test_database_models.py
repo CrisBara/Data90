@@ -10,9 +10,14 @@ def test_initial_schema_registers_expected_tables() -> None:
         "competition_seasons",
         "teams",
         "team_aliases",
+        "players",
+        "source_players",
+        "player_competition_season_statistics",
+        "player_team_seasons",
         "source_matches",
         "matches",
         "match_team_statistics",
+        "player_match_statistics",
         "standings_snapshots",
         "standing_rows",
         "sync_runs",
@@ -23,4 +28,10 @@ def test_initial_schema_registers_expected_tables() -> None:
 def test_unknown_match_statistics_are_nullable() -> None:
     table = Base.metadata.tables["match_team_statistics"]
     for name in ("possession", "shots_total", "corners", "passes_total"):
+        assert table.c[name].nullable
+
+
+def test_player_profile_fields_are_nullable_for_partial_provider_coverage() -> None:
+    table = Base.metadata.tables["players"]
+    for name in ("nationality", "birth_date", "height", "weight", "position", "photo_url"):
         assert table.c[name].nullable

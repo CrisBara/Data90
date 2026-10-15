@@ -70,7 +70,7 @@ def test_competition_statistics_use_a_fixed_number_of_queries_and_skip_unknown_s
             event.remove(engine, "before_cursor_execute", count_selects)
 
     by_id = {item.team_id: item for item in statistics}
-    assert select_count == 2
+    assert select_count == 3
     assert set(by_id) == {1, 2, 3}
     assert (by_id[1].metrics.played, by_id[1].metrics.won, by_id[1].metrics.points) == (1, 1, 3)
     assert (by_id[2].metrics.played, by_id[2].metrics.lost, by_id[2].metrics.points) == (1, 1, 0)

@@ -120,6 +120,95 @@ class TeamAlias(Base):
     normalized_alias: Mapped[str] = mapped_column(String(150), nullable=False)
 
 
+class TeamCoach(Base):
+    __tablename__ = "team_coaches"
+    __table_args__ = (UniqueConstraint("team_id", "source_id"),)
+
+    id: Mapped[int] = mapped_column(BIGINT_PK, primary_key=True)
+    team_id: Mapped[int] = mapped_column(ForeignKey("teams.id"), nullable=False)
+    source_id: Mapped[int] = mapped_column(ForeignKey("data_sources.id"), nullable=False)
+    external_id: Mapped[str | None] = mapped_column(String(100))
+    full_name: Mapped[str] = mapped_column(String(150), nullable=False)
+    source_updated_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+
+
+class Player(TimestampMixin, Base):
+    __tablename__ = "players"
+
+    id: Mapped[int] = mapped_column(BIGINT_PK, primary_key=True)
+    display_name: Mapped[str] = mapped_column(String(150), nullable=False)
+    nationality: Mapped[str | None] = mapped_column(String(100))
+    birth_date: Mapped[date | None] = mapped_column(Date)
+    birth_place: Mapped[str | None] = mapped_column(String(100))
+    height: Mapped[str | None] = mapped_column(String(20))
+    weight: Mapped[str | None] = mapped_column(String(20))
+    position: Mapped[str | None] = mapped_column(String(50))
+    preferred_foot: Mapped[str | None] = mapped_column(String(16))
+    photo_url: Mapped[str | None] = mapped_column(Text)
+    profile_source_id: Mapped[int | None] = mapped_column(ForeignKey("data_sources.id"))
+    profile_updated_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+
+
+class SourcePlayer(Base):
+    __tablename__ = "source_players"
+    __table_args__ = (UniqueConstraint("source_id", "external_id"),)
+
+    id: Mapped[int] = mapped_column(BIGINT_PK, primary_key=True)
+    player_id: Mapped[int] = mapped_column(ForeignKey("players.id"), nullable=False)
+    source_id: Mapped[int] = mapped_column(ForeignKey("data_sources.id"), nullable=False)
+    external_id: Mapped[str] = mapped_column(String(100), nullable=False)
+
+
+class PlayerTeamSeason(Base):
+    __tablename__ = "player_team_seasons"
+    __table_args__ = (
+        UniqueConstraint("player_id", "team_id", "competition_season_id", "source_id"),
+        Index("ix_player_team_seasons_season_team", "competition_season_id", "team_id"),
+    )
+
+    id: Mapped[int] = mapped_column(BIGINT_PK, primary_key=True)
+    player_id: Mapped[int] = mapped_column(ForeignKey("players.id"), nullable=False)
+    team_id: Mapped[int] = mapped_column(ForeignKey("teams.id"), nullable=False)
+    competition_season_id: Mapped[int] = mapped_column(
+        ForeignKey("competition_seasons.id"), nullable=False
+    )
+    source_id: Mapped[int] = mapped_column(ForeignKey("data_sources.id"), nullable=False)
+    shirt_number: Mapped[int | None] = mapped_column(SmallInteger)
+    position: Mapped[str | None] = mapped_column(String(50))
+    active: Mapped[bool] = mapped_column(Boolean, nullable=False, server_default=text("true"))
+    source_updated_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+
+
+class PlayerCompetitionSeasonStatistic(Base):
+    __tablename__ = "player_competition_season_statistics"
+    __table_args__ = (
+        UniqueConstraint("player_id", "competition_season_id", "source_id"),
+        Index("ix_player_season_goals", "competition_season_id", "goals"),
+    )
+
+    id: Mapped[int] = mapped_column(BIGINT_PK, primary_key=True)
+    player_id: Mapped[int] = mapped_column(ForeignKey("players.id"), nullable=False)
+    competition_season_id: Mapped[int] = mapped_column(
+        ForeignKey("competition_seasons.id"), nullable=False
+    )
+    source_id: Mapped[int] = mapped_column(ForeignKey("data_sources.id"), nullable=False)
+    appearances: Mapped[int | None] = mapped_column(SmallInteger)
+    starts: Mapped[int | None] = mapped_column(SmallInteger)
+    substitute_appearances: Mapped[int | None] = mapped_column(SmallInteger)
+    minutes_played: Mapped[int | None] = mapped_column(SmallInteger)
+    goals: Mapped[int | None] = mapped_column(SmallInteger)
+    assists: Mapped[int | None] = mapped_column(SmallInteger)
+    penalties_scored: Mapped[int | None] = mapped_column(SmallInteger)
+    yellow_cards: Mapped[int | None] = mapped_column(SmallInteger)
+    red_cards: Mapped[int | None] = mapped_column(SmallInteger)
+    tackles_won: Mapped[int | None] = mapped_column(SmallInteger)
+    shots_total: Mapped[int | None] = mapped_column(SmallInteger)
+    shots_on_target: Mapped[int | None] = mapped_column(SmallInteger)
+    goals_conceded: Mapped[int | None] = mapped_column(SmallInteger)
+    clean_sheets: Mapped[int | None] = mapped_column(SmallInteger)
+    source_updated_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+
+
 class SourceCompetition(Base):
     __tablename__ = "source_competitions"
     __table_args__ = (UniqueConstraint("source_id", "competition_id"),)
@@ -234,8 +323,68 @@ class MatchTeamStatistic(Base):
     source_updated_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
 
 
+class TeamCompetitionSeasonStatistic(Base):
+    """Provider-supplied team totals/averages for a competition season."""
+
+    __tablename__ = "team_competition_season_statistics"
+    __table_args__ = (
+        UniqueConstraint("team_id", "competition_season_id", "source_id"),
+        Index("ix_team_competition_season_stats_season", "competition_season_id"),
+    )
+
+    id: Mapped[int] = mapped_column(BIGINT_PK, primary_key=True)
+    team_id: Mapped[int] = mapped_column(ForeignKey("teams.id"), nullable=False)
+    competition_season_id: Mapped[int] = mapped_column(
+        ForeignKey("competition_seasons.id"), nullable=False
+    )
+    source_id: Mapped[int] = mapped_column(ForeignKey("data_sources.id"), nullable=False)
+    goals_average: Mapped[float | None] = mapped_column(Numeric(6, 2))
+    goals_conceded_average: Mapped[float | None] = mapped_column(Numeric(6, 2))
+    clean_sheets: Mapped[int | None] = mapped_column(SmallInteger)
+    possession_percentage: Mapped[float | None] = mapped_column(Numeric(5, 2))
+    corners_average: Mapped[float | None] = mapped_column(Numeric(6, 2))
+    penalties_scored: Mapped[int | None] = mapped_column(SmallInteger)
+    penalties_attempted: Mapped[int | None] = mapped_column(SmallInteger)
+    penalties_conceded: Mapped[int | None] = mapped_column(SmallInteger)
+    penalties_conceded_attempted: Mapped[int | None] = mapped_column(SmallInteger)
+    yellow_cards: Mapped[int | None] = mapped_column(SmallInteger)
+    red_cards: Mapped[int | None] = mapped_column(SmallInteger)
+    source_updated_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+
+
+class PlayerMatchStatistic(Base):
+    """Player box-score values tied to a single match and provider."""
+
+    __tablename__ = "player_match_statistics"
+    __table_args__ = (
+        UniqueConstraint("match_id", "player_id", "source_id"),
+        Index("ix_player_match_statistics_player_match", "player_id", "match_id"),
+    )
+
+    id: Mapped[int] = mapped_column(BIGINT_PK, primary_key=True)
+    match_id: Mapped[int] = mapped_column(ForeignKey("matches.id"), nullable=False)
+    player_id: Mapped[int] = mapped_column(ForeignKey("players.id"), nullable=False)
+    team_id: Mapped[int] = mapped_column(ForeignKey("teams.id"), nullable=False)
+    source_id: Mapped[int] = mapped_column(ForeignKey("data_sources.id"), nullable=False)
+    minutes_played: Mapped[int | None] = mapped_column(SmallInteger)
+    is_substitute: Mapped[bool | None] = mapped_column(Boolean)
+    shirt_number: Mapped[int | None] = mapped_column(SmallInteger)
+    position: Mapped[str | None] = mapped_column(String(50))
+    goals: Mapped[int | None] = mapped_column(SmallInteger)
+    assists: Mapped[int | None] = mapped_column(SmallInteger)
+    yellow_cards: Mapped[int | None] = mapped_column(SmallInteger)
+    red_cards: Mapped[int | None] = mapped_column(SmallInteger)
+    shots_total: Mapped[int | None] = mapped_column(SmallInteger)
+    shots_on_target: Mapped[int | None] = mapped_column(SmallInteger)
+    goals_conceded: Mapped[int | None] = mapped_column(SmallInteger)
+    clean_sheet: Mapped[bool | None] = mapped_column(Boolean)
+    goalkeeper_saves: Mapped[int | None] = mapped_column(SmallInteger)
+    source_updated_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+
+
 class MatchEvent(Base):
     __tablename__ = "match_events"
+    __table_args__ = (Index("ix_match_events_player_id", "player_id"),)
 
     id: Mapped[int] = mapped_column(BIGINT_PK, primary_key=True)
     match_id: Mapped[int] = mapped_column(ForeignKey("matches.id"), nullable=False)
@@ -244,6 +393,7 @@ class MatchEvent(Base):
     minute: Mapped[int | None] = mapped_column(SmallInteger)
     added_time: Mapped[int | None] = mapped_column(SmallInteger)
     player_name: Mapped[str | None] = mapped_column(String(150))
+    player_id: Mapped[int | None] = mapped_column(ForeignKey("players.id"))
     assist_name: Mapped[str | None] = mapped_column(String(150))
     source_id: Mapped[int] = mapped_column(ForeignKey("data_sources.id"), nullable=False)
     external_id: Mapped[str | None] = mapped_column(String(100))

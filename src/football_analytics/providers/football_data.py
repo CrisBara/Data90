@@ -126,6 +126,13 @@ class FootballDataProvider(HttpProvider):
             end_date=date.fromisoformat(season["endDate"]) if season.get("endDate") else None,
         )
 
+    def get_team_details(self, team_external_id: str) -> dict[str, Any]:
+        """Return the provider's current team profile and full published squad."""
+        data = self._get(f"teams/{team_external_id}")
+        if data.get("id") is None or not isinstance(data.get("squad"), list):
+            raise ProviderError("football-data.org devolvió un equipo sin plantel válido")
+        return data
+
     def get_teams(self, competition_code: str, season_start_year: int) -> Iterable[NormalizedTeam]:
         data = self._get(
             f"competitions/{self.external_code(competition_code)}/teams",

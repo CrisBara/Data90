@@ -88,4 +88,6 @@ def test_team_metrics_use_only_finished_matches_with_known_scores() -> None:
     assert metrics.failed_to_score == 1
     assert (metrics.home_played, metrics.home_points) == (2, 3)
     assert (metrics.away_played, metrics.away_points) == (2, 4)
+    assert (metrics.home_won, metrics.home_drawn, metrics.home_lost) == (1, 0, 1)
+    assert (metrics.away_won, metrics.away_drawn, metrics.away_lost) == (1, 1, 0)
     assert metrics.unbeaten_streak == 1

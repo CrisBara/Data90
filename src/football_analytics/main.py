@@ -1,6 +1,7 @@
 """Launch the local desktop application."""
 
 import sys
+from datetime import UTC, datetime
 from pathlib import Path
 
 from PySide6.QtCore import QUrl
@@ -9,11 +10,12 @@ from PySide6.QtWidgets import QApplication, QDialog, QMessageBox
 from sqlalchemy import text
 from sqlalchemy.engine import Engine
 
+from football_analytics.config.constants import COMPETITIONS, SOURCES
 from football_analytics.config.paths import environment_file, project_root
 from football_analytics.config.settings import get_settings
-from football_analytics.database.session import make_engine, make_session_factory
+from football_analytics.database.session import make_engine
 from football_analytics.ui.setup_wizard import SetupWizard
-from football_analytics.ui.window import MainWindow
+from football_analytics.ui.web_desktop import WebDesktopWindow
 
 
 def _connect_database() -> Engine | None:
@@ -29,6 +31,23 @@ def _connect_database() -> Engine | None:
         except Exception as error:
             if engine is not None:
                 engine.dispose()
+
+            try:
+                log_directory = project_root() / "logs"
+                log_directory.mkdir(parents=True, exist_ok=True)
+                message = str(error)
+                password = get_settings().database_password.get_secret_value()
+                if password:
+                    message = message.replace(password, "[REDACTED]")
+                with (log_directory / "app-startup-errors.log").open(
+                    "a", encoding="utf-8"
+                ) as log_file:
+                    log_file.write(
+                        f"{datetime.now(UTC).isoformat()} "
+                        f"{error.__class__.__name__}: {message}\n"
+                    )
+            except Exception:
+                pass
 
             dialog = QMessageBox()
             dialog.setWindowTitle("Base de datos local no disponible")
@@ -82,12 +101,12 @@ def _database_needs_setup(engine: Engine) -> bool:
                 "(SELECT count(*) FROM sync_runs)"
             )
         ).one()
-    return competition_count < 8 or source_count < 3 or run_count == 0
+    return competition_count < len(COMPETITIONS) or source_count < len(SOURCES) or run_count == 0
 
 
 def main() -> int:
     app = QApplication(sys.argv)
-    app.setApplicationName("Football Analytics Pro")
+    app.setApplicationName("Data90")
     app.setStyle("Fusion")
     stylesheet = Path(__file__).parent / "ui" / "theme" / "app.qss"
     if stylesheet.is_file():
@@ -98,7 +117,10 @@ def main() -> int:
     try:
         if _database_needs_setup(engine):
             wizard = SetupWizard(
-                token_configured=bool(get_settings().football_data_token.get_secret_value())
+                token_configured=bool(get_settings().football_data_token.get_secret_value()),
+                api_football_token_configured=bool(
+                    get_settings().api_football_token.get_secret_value()
+                ),
             )
             if wizard.exec() != QDialog.DialogCode.Accepted:
                 engine.dispose()
@@ -120,8 +142,8 @@ def main() -> int:
         )
         engine.dispose()
         return 1
-    window = MainWindow(make_session_factory(engine))
-    window.show()
+    window = WebDesktopWindow()
+    window.showMaximized()
     app.aboutToQuit.connect(engine.dispose)
     return app.exec()
 

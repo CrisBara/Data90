@@ -49,6 +49,7 @@ class OpenFootballProvider(HttpProvider):
     def __init__(self, **kwargs: Any) -> None:
         super().__init__(**kwargs)
         self._dataset_cache: dict[str, list[dict[str, Any]]] = {}
+        self.incomplete_match_count = 0
 
     def _dataset(
         self, season_start_year: int, dataset_file: str
@@ -164,19 +165,37 @@ class OpenFootballProvider(HttpProvider):
         timezone_name: str | None = None,
         date_from: date | None = None,
         date_to: date | None = None,
+        skip_incomplete: bool = False,
     ) -> Iterable[NormalizedMatch]:
         zone = self._timezone(competition_code, timezone_name)
         _, records = self._dataset(season_start_year, dataset_file)
         matches = []
+        self.incomplete_match_count = 0
         for item in records:
             if not isinstance(item, dict):
+                if skip_incomplete:
+                    self.incomplete_match_count += 1
+                    continue
                 raise ProviderError("OpenFootball publicó un partido con formato inesperado")
-            local_kickoff = self._local_kickoff(item, zone)
+            try:
+                local_kickoff = self._local_kickoff(item, zone)
+            except ProviderError:
+                if skip_incomplete:
+                    self.incomplete_match_count += 1
+                    continue
+                raise
             if date_from is not None and local_kickoff.date() < date_from:
                 continue
             if date_to is not None and local_kickoff.date() > date_to:
                 continue
-            matches.append(self._normalize_match(item, competition_code, season_start_year, zone))
+            try:
+                matches.append(
+                    self._normalize_match(item, competition_code, season_start_year, zone)
+                )
+            except ProviderError:
+                if not skip_incomplete:
+                    raise
+                self.incomplete_match_count += 1
         return matches
 
     def get_teams(
@@ -186,18 +205,29 @@ class OpenFootballProvider(HttpProvider):
         dataset_file: str,
         *,
         timezone_name: str | None = None,
+        skip_incomplete: bool = False,
     ) -> Iterable[NormalizedTeam]:
-        self._timezone(competition_code, timezone_name)
+        zone = self._timezone(competition_code, timezone_name)
         _, records = self._dataset(season_start_year, dataset_file)
         teams: dict[str, NormalizedTeam] = {}
         for item in records:
             if not isinstance(item, dict):
+                if skip_incomplete:
+                    continue
                 raise ProviderError("OpenFootball publicó un partido con formato inesperado")
-            for key in ("team1", "team2"):
-                name = item.get(key)
-                if not isinstance(name, str) or not name.strip():
-                    raise ProviderError("OpenFootball publicó un partido sin nombre de equipo")
-                team_id = _team_external_id(name)
+            if skip_incomplete:
+                try:
+                    self._local_kickoff(item, zone)
+                except ProviderError:
+                    continue
+            names = [item.get("team1"), item.get("team2")]
+            if any(not isinstance(name, str) or not name.strip() for name in names):
+                if skip_incomplete:
+                    continue
+                raise ProviderError("OpenFootball publicó un partido sin nombre de equipo")
+            for name in names:
+                assert isinstance(name, str)
+                team_id = _team_external_id(name.strip())
                 teams.setdefault(
                     team_id,
                     NormalizedTeam(

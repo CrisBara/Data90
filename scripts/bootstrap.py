@@ -12,6 +12,12 @@ from football_analytics.database.session import make_engine, make_session_factor
 from football_analytics.domain.enums import SyncMode
 from football_analytics.providers.football_data import FootballDataProvider
 from football_analytics.providers.openligadb import OpenLigaDBProvider
+from football_analytics.services.api_football_player_sync import sync_api_football_players
+from football_analytics.services.eredivisie_fantasy_sync import sync_eredivisie_fantasy_players
+from football_analytics.services.football_data_squad_sync import sync_current_football_data_squads
+from football_analytics.services.match_event_sync import sync_match_goal_events
+from football_analytics.services.player_sync import sync_player_statistics
+from football_analytics.services.promiedos_sync import sync_promiedos_player_statistics
 from football_analytics.sync.orchestrator import run_sync
 
 
@@ -84,7 +90,7 @@ def main() -> int:
                     mapping.external_code = external_code or mapping.external_code
                     session.add(mapping)
         print("Competitions seeded        8")
-        print("Sources seeded             3")
+        print(f"Sources seeded             {len(SOURCES)}")
         mapping_count = sum(len(definition.provider_codes) for definition in COMPETITIONS)
         print(f"Source mappings seeded     {mapping_count}")
         print("Schema migration            OK")
@@ -105,7 +111,69 @@ def main() -> int:
         print(f"Matches skipped             {summary.skipped_count}")
         print(f"Conflicts                  {summary.conflict_count}")
         print(summary.message)
-        return 0 if summary.status.value == "SUCCESS" else 2
+        player_summary = sync_player_statistics(
+            make_session_factory(engine),
+            competition_codes=tuple(args.competitions) if args.competitions else None,
+            mode=SyncMode.BOOTSTRAP,
+        )
+        print(f"Player statistics          {player_summary.status.value}")
+        print(f"Player rows inserted       {player_summary.inserted_count}")
+        print(f"Player rows updated        {player_summary.updated_count}")
+        print(f"Player sync errors         {player_summary.error_count}")
+        event_summary = sync_match_goal_events(
+            make_session_factory(engine),
+            competition_codes=tuple(args.competitions) if args.competitions else None,
+        )
+        print(f"Goal events                {event_summary.status.value}")
+        print(f"Goal events inserted       {event_summary.inserted_count}")
+        print(f"Goal event sync errors     {event_summary.error_count}")
+        api_players = sync_api_football_players(
+            make_session_factory(engine),
+            competition_codes=tuple(args.competitions) if args.competitions else None,
+        )
+        print(f"API-Football players       {api_players.status.value}")
+        print(
+            f"Player profiles/stats      {api_players.inserted_count} new · "
+            f"{api_players.updated_count} updated"
+        )
+        print(f"API-Football errors        {api_players.error_count}")
+        promiedos = sync_promiedos_player_statistics(
+            make_session_factory(engine),
+            competition_codes=tuple(args.competitions) if args.competitions else None,
+        )
+        print(f"Promiedos current stats    {promiedos.status.value}")
+        print(f"Current stats inserted     {promiedos.inserted_count}")
+        print(f"Current stats updated      {promiedos.updated_count}")
+        print(f"Promiedos errors           {promiedos.error_count}")
+        eredivisie = (
+            sync_eredivisie_fantasy_players(
+                make_session_factory(engine),
+                # Restrict this extra player API call to the selected season scope when supplied.
+            )
+            if not args.competitions or "EREDIVISIE" in args.competitions
+            else None
+        )
+        squads = sync_current_football_data_squads(
+            make_session_factory(engine),
+            provider=FootballDataProvider(),
+            competition_codes=tuple(args.competitions) if args.competitions else None,
+        )
+        print(f"Current full squads        {squads['status'].value}")
+        print(f"Current squad clubs        {squads['teams_count']}")
+        print(f"Squad profiles inserted    {squads['inserted_count']}")
+        print(f"Squad profiles updated     {squads['updated_count']}")
+        print(f"Squad sync errors          {squads['error_count']}")
+        return (
+            0
+            if summary.error_count == 0
+            and player_summary.error_count == 0
+            and event_summary.error_count == 0
+            and api_players.error_count == 0
+            and promiedos.error_count == 0
+            and (eredivisie is None or eredivisie["error_count"] == 0)
+            and squads["error_count"] == 0
+            else 2
+        )
     except Exception as error:
         print(f"Bootstrap failed: {error.__class__.__name__}: {error}")
         return 1

@@ -96,6 +96,29 @@ class NormalizedStanding:
 
 
 @dataclass(frozen=True, slots=True)
+class NormalizedPlayerSeasonStatistic:
+    source_code: str
+    external_id: str
+    display_name: str
+    competition_code: str
+    season_start_year: int
+    goals: int | None = None
+    appearances: int | None = None
+    starts: int | None = None
+    substitute_appearances: int | None = None
+    minutes_played: int | None = None
+    assists: int | None = None
+    penalties_scored: int | None = None
+    yellow_cards: int | None = None
+    red_cards: int | None = None
+    tackles_won: int | None = None
+    shots_total: int | None = None
+    shots_on_target: int | None = None
+    goals_conceded: int | None = None
+    clean_sheets: int | None = None
+
+
+@dataclass(frozen=True, slots=True)
 class NormalizedTeamStatistic:
     source_code: str
     external_match_id: str

@@ -3,9 +3,9 @@ requires = ["setuptools==80.9.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "football-analytics-pro"
+name = "data90"
 version = "0.1.0"
-description = "Aplicación local para consultar y analizar datos históricos de fútbol de clubes."
+description = "Aplicación local para consultar y analizar datos de fútbol de clubes."
 readme = "README.md"
 requires-python = ">=3.13,<3.15"
 dependencies = [
@@ -23,6 +23,7 @@ dependencies = [
 
 [project.scripts]
 football-analytics = "football_analytics.main:main"
+football-analytics-web = "football_analytics.web:main"
 
 [project.optional-dependencies]
 dev = ["pytest==8.4.1", "pytest-cov==6.2.1", "ruff==0.12.2"]
@@ -32,7 +33,7 @@ build = ["pyinstaller==6.22.3", "pyinstaller-hooks-contrib==2026.8"]
 where = ["src"]
 
 [tool.setuptools.package-data]
-football_analytics = ["ui/theme/*.qss"]
+football_analytics = ["ui/theme/*.qss", "ui/web/*.html", "ui/web/*.css", "ui/web/*.js", "ui/web/*.svg"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

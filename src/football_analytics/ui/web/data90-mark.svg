@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Data90">
+  <circle cx="32" cy="32" r="31" fill="#03080c"/>
+  <circle cx="32" cy="32" r="27.5" fill="#64cde2" stroke="#102530" stroke-width="1.6"/>
+  <text x="32" y="40" text-anchor="middle" fill="#07131d" font-family="Arial,sans-serif" font-size="22" font-weight="900" font-style="italic" letter-spacing="0"><tspan letter-spacing="0">D</tspan><tspan dx="0" letter-spacing="-0.8">90</tspan></text>
+</svg>

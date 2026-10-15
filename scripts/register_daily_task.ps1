@@ -12,11 +12,7 @@ if (-not (Test-Path -LiteralPath $environmentFile -PathType Leaf)) {
 if (-not (Test-Path -LiteralPath $pythonExecutable -PathType Leaf)) {
     throw 'No se encontró .venv. Instalá primero las dependencias del proyecto.'
 }
-if (Get-ScheduledTask -TaskName $taskName -ErrorAction SilentlyContinue) {
-    throw "La tarea $taskName ya existe; no se modificó."
-}
-
-$syncTime = '08:00'
+$syncTime = '21:00'
 $tokenConfigured = $false
 foreach ($line in Get-Content -LiteralPath $environmentFile) {
     if ($line -match '^\s*SYNC_TIME\s*=\s*(\d{2}:\d{2})\s*$') {
@@ -38,9 +34,10 @@ $action = New-ScheduledTaskAction `
 $trigger = New-ScheduledTaskTrigger -Daily -At $runAt
 $settings = New-ScheduledTaskSettingsSet `
     -StartWhenAvailable `
+    -WakeToRun `
     -AllowStartIfOnBatteries `
     -DontStopIfGoingOnBatteries `
-    -ExecutionTimeLimit (New-TimeSpan -Hours 2) `
+    -ExecutionTimeLimit (New-TimeSpan -Hours 8) `
     -MultipleInstances IgnoreNew
 $principal = New-ScheduledTaskPrincipal `
     -UserId "$env:USERDOMAIN\$env:USERNAME" `
@@ -54,6 +51,7 @@ $null = Register-ScheduledTask `
     -Settings $settings `
     -Principal $principal `
     -Description 'Actualiza Football Analytics Pro una vez al día.' `
+    -Force `
     -ErrorAction Stop
 
 $registeredTask = Get-ScheduledTask -TaskName $taskName -ErrorAction Stop

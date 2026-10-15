@@ -5,16 +5,26 @@ from collections.abc import Iterable
 from datetime import UTC, date, datetime
 from typing import Any
 
-from football_analytics.domain.dto import NormalizedMatch, NormalizedStanding, NormalizedTeam
+from football_analytics.domain.dto import (
+    NormalizedMatch,
+    NormalizedPlayerSeasonStatistic,
+    NormalizedStanding,
+    NormalizedTeam,
+)
 from football_analytics.domain.enums import MatchStatus
 from football_analytics.domain.exceptions import ProviderError
 from football_analytics.providers.base import HttpProvider
 from football_analytics.sync.normalizer import normalize_name
+from football_analytics.sync.rate_limiter import SlidingWindowRateLimiter
 
 
 class OpenLigaDBProvider(HttpProvider):
     source_code = "openligadb"
     base_url = "https://api.openligadb.de"
+    _rate_limiter = SlidingWindowRateLimiter(limit=50, window_seconds=60)
+
+    def before_request(self) -> None:
+        self._rate_limiter.acquire()
 
     @staticmethod
     def _date(value: str | None) -> datetime | None:
@@ -94,12 +104,19 @@ class OpenLigaDBProvider(HttpProvider):
         date_from: date | None = None,
         date_to: date | None = None,
     ) -> Iterable[NormalizedMatch]:
-        result = self.request_json(f"getmatchdata/{shortcut}/{season_start_year}")
-        if not isinstance(result, list):
-            raise ProviderError("OpenLigaDB devolvió partidos con formato inesperado")
+        result = self.get_match_data(shortcut, season_start_year)
         return self._normalize_matches(
             result, competition_code, season_start_year, date_from, date_to
         )
+
+    def get_match_data(self, shortcut: str, season_start_year: int) -> list[dict[str, Any]]:
+        """Return validated raw match records, including source-provided goal events."""
+        result = self.request_json(f"getmatchdata/{shortcut}/{season_start_year}")
+        if not isinstance(result, list):
+            raise ProviderError("OpenLigaDB devolvió partidos con formato inesperado")
+        if any(not isinstance(item, dict) for item in result):
+            raise ProviderError("OpenLigaDB devolvió partidos con formato inesperado")
+        return result
 
     def get_changed_matches(
         self,
@@ -213,3 +230,37 @@ class OpenLigaDBProvider(HttpProvider):
                 )
             )
         return rows
+
+    def get_goal_getters(
+        self, competition_code: str, season_start_year: int, shortcut: str
+    ) -> list[NormalizedPlayerSeasonStatistic]:
+        result = self.request_json(f"getgoalgetters/{shortcut}/{season_start_year}")
+        if not isinstance(result, list):
+            raise ProviderError("OpenLigaDB devolvió goleadores con formato inesperado")
+        players = []
+        for row in result:
+            if not isinstance(row, dict):
+                raise ProviderError("OpenLigaDB devolvió un goleador con formato inesperado")
+            external_id = row.get("goalGetterId")
+            name = row.get("goalGetterName")
+            goals = row.get("goalCount")
+            if (
+                external_id is None
+                or not isinstance(name, str)
+                or not name.strip()
+                or isinstance(goals, bool)
+                or not isinstance(goals, int)
+                or goals < 0
+            ):
+                raise ProviderError("OpenLigaDB devolvió un goleador incompleto")
+            players.append(
+                NormalizedPlayerSeasonStatistic(
+                    source_code=self.source_code,
+                    external_id=str(external_id),
+                    display_name=name.strip(),
+                    competition_code=competition_code,
+                    season_start_year=season_start_year,
+                    goals=goals,
+                )
+            )
+        return players

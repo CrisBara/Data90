@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#050d15">
+  <title>Football Analytics Pro · Nuevos mockups</title>
+  <style>
+    :root{
+      color-scheme:dark;
+      font-family:"Segoe UI",Arial,sans-serif;
+      --void:#050d15;--base:#08131e;--panel:#0d1b28;--panel2:#102333;
+      --line:#1e3446;--ink:#d8e5ee;--white:#e7f3fa;--muted:#8ca1b1;
+      --sky:#65c9e7;--cyan:#91e3f5;--blue:#12638a;--green:#50c996;
+      --red:#f0787d;--amber:#e7bd69;--mono:Consolas,"Courier New",monospace;
+    }
+    *{box-sizing:border-box} body{margin:0;min-height:100vh;background:var(--void);color:var(--ink)}
+    button{font:inherit;color:inherit;cursor:pointer}
+    .shell{width:min(1480px,calc(100% - 48px));margin:0 auto;padding:28px 0 50px}
+    .intro{display:flex;align-items:end;justify-content:space-between;gap:30px;margin:0 0 22px}
+    .eyebrow,.micro{font:700 10px var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--sky)}
+    h1{margin:9px 0 5px;color:var(--white);font-size:clamp(26px,3vw,39px);letter-spacing:-.04em;font-weight:650}
+    .intro p{max-width:640px;margin:0;color:var(--muted);font-size:13px;line-height:1.55}
+    .demo-flag{flex:none;border:1px solid #294153;padding:8px 11px;color:#a8bdc9;background:#0b1823;font:700 9px var(--mono);letter-spacing:.08em}
+    .concepts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-bottom:12px}
+    .concept{min-height:75px;text-align:left;padding:12px 15px;border:1px solid var(--line);background:#09141e;transition:border-color .16s,background .16s}
+    .concept:hover{border-color:#4a8ca3}.concept[aria-pressed=true]{border-color:var(--sky);background:#0d2230;box-shadow:inset 3px 0 var(--sky)}
+    .concept b{display:block;color:var(--white);font-size:13px;font-weight:700}.concept span{display:block;margin-top:5px;color:var(--muted);font-size:11px;line-height:1.4}
+    .stage{border:1px solid #23394b;background:var(--base);box-shadow:0 24px 65px #0008;overflow:hidden}
+    .proposal{display:none;min-height:790px}.proposal.active{display:block}
+    .view-caption{display:flex;align-items:center;justify-content:space-between;gap:15px;padding:11px 17px;border-bottom:1px solid var(--line);background:#07111a;color:var(--muted);font:10px var(--mono);letter-spacing:.06em}
+    .view-caption b{color:var(--sky);font-weight:700}
+    .brandline{display:flex;align-items:center;gap:12px}.brand-icon{display:grid;place-items:center;width:31px;height:31px;border:1px solid #3a6577;color:var(--cyan);font:800 10px var(--mono);transform:rotate(-4deg)}
+    .brand-name{color:var(--white);font-size:13px;font-weight:700;letter-spacing:.01em}.brand-note{margin-top:2px;color:var(--muted);font:9px var(--mono);letter-spacing:.06em}
+    .top-nav{display:flex;align-items:center;gap:20px}.top-nav a{color:#9db0be;text-decoration:none;font-size:11px}.top-nav a.active{color:var(--cyan);text-decoration:underline;text-underline-offset:7px}
+    .search{display:flex;align-items:center;gap:8px;min-width:210px;padding:8px 10px;border:1px solid #294153;color:#8ca1b1;font-size:10px;background:#08131e}.search kbd{margin-left:auto;color:#6f8798;font:9px var(--mono)}
+    .mast{display:grid;grid-template-columns:1fr auto;align-items:end;gap:20px;padding:24px 28px 18px;border-bottom:1px solid var(--line)}
+    .mast h2{margin:4px 0 4px;color:var(--white);font-size:clamp(26px,3vw,42px);font-weight:620;letter-spacing:-.045em;line-height:1.04}
+    .mast p{margin:0;color:var(--muted);font-size:11px}.date-stamp{text-align:right;color:var(--cyan);font:11px var(--mono);line-height:1.7}.date-stamp small{display:block;color:var(--muted);font-size:9px}
+    .ed-header{display:flex;justify-content:space-between;align-items:center;gap:20px;padding:13px 28px;border-bottom:1px solid var(--line)}
+    .ed-header .brandline{min-width:235px}.ed-header .top-nav{margin-left:auto}
+    .ed-grid{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(260px,.72fr);gap:0;min-height:628px}
+    .ed-main{padding:22px 28px 28px;border-right:1px solid var(--line)}.ed-side{padding:22px 22px 24px;background:#091722}
+    .match-feature{display:grid;grid-template-columns:1fr 164px 1fr;align-items:center;gap:15px;padding:18px 0 21px;border-top:1px solid #294153;border-bottom:1px solid #294153}
+    .team-large{display:flex;align-items:center;gap:11px;min-width:0}.team-large.away{justify-content:flex-end;text-align:right}.crest{display:grid;place-items:center;flex:none;width:38px;height:38px;border:1px solid #315368;border-radius:50%;background:#102333;color:var(--cyan);font:700 10px var(--mono)}
+    .team-large b{display:block;color:var(--white);font-size:15px;font-weight:700}.team-large small{display:block;margin-top:3px;color:var(--muted);font-size:9px}
+    .scorebox{text-align:center}.scorebox .score{color:var(--white);font:700 29px var(--mono);letter-spacing:.08em}.scorebox small{display:block;margin-top:4px;color:var(--muted);font:9px var(--mono)}
+    .section-title{display:flex;align-items:center;justify-content:space-between;gap:15px;margin:22px 0 10px}.section-title h3{margin:0;color:var(--white);font-size:14px;font-weight:650}.section-title span{color:var(--muted);font:9px var(--mono);text-transform:uppercase;letter-spacing:.1em}
+    .table{width:100%;border-collapse:collapse;font-size:10px}.table th{padding:9px 8px;border-bottom:1px solid #294153;color:#78909f;text-align:left;font:9px var(--mono);letter-spacing:.08em}.table td{padding:10px 8px;border-bottom:1px solid #172c3b;color:#c4d3dc}.table td.num,.table th.num{text-align:center;font:10px var(--mono)}.table td.points{color:var(--white);font-weight:800;background:#102b3a}.table tr.highlight td{color:#e6f6fc;background:#0e2735}.table tr.highlight td.points{color:#fff}.club-name{display:flex;align-items:center;gap:8px;color:var(--white);font-weight:650}.mini-crest{width:19px;height:19px}.pos{color:#78909f;font:9px var(--mono)}
+    .next-row{display:grid;grid-template-columns:50px minmax(0,1fr) auto;align-items:center;gap:10px;padding:11px 0;border-bottom:1px solid #203544}.next-row:last-child{border-bottom:0}.next-time{color:var(--cyan);font:10px var(--mono)}.fixture-teams{color:var(--white);font-size:11px;font-weight:600}.fixture-teams small{display:block;margin-top:3px;color:var(--muted);font-size:9px;font-weight:400}.tag{padding:4px 6px;border:1px solid #2b4d60;color:#9ecddd;font:8px var(--mono);text-transform:uppercase}
+    .note{margin-top:23px;padding:13px 14px 14px 16px;border-left:2px solid var(--sky);background:#0e202b}.note q{display:block;color:#c7d7de;font-size:12px;font-style:italic;line-height:1.5}.note small{display:block;margin-top:9px;color:var(--muted);font:9px var(--mono)}
+    .score-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;margin-top:22px;background:var(--line);border:1px solid var(--line)}.score-stat{padding:12px;background:var(--base)}.score-stat b{display:block;color:var(--white);font:700 19px var(--mono)}.score-stat span{display:block;margin-top:4px;color:var(--muted);font-size:9px}
+    /* Concept 2: calendario como pieza central, navegación horizontal y ritmo de agenda */
+    .cal-top{display:flex;align-items:center;gap:23px;padding:15px 22px;border-bottom:1px solid var(--line)}.cal-top .top-nav{margin-left:auto}.cal-wrap{padding:24px 24px 28px}
+    .cal-heading{display:flex;align-items:end;justify-content:space-between;gap:20px;margin-bottom:18px}.cal-heading h2{margin:5px 0;color:var(--white);font-size:36px;font-weight:620;letter-spacing:-.045em}.cal-heading p{margin:0;color:var(--muted);font-size:11px}.filters{display:flex;gap:7px}.filter{padding:8px 10px;border:1px solid #294153;color:#a7bbc7;background:#0c1a25;font-size:10px}
+    .date-ribbon{display:grid;grid-template-columns:repeat(7,1fr);border:1px solid #294153;margin-bottom:20px}.day{min-height:67px;padding:9px 11px;border-right:1px solid #294153;background:#091722;color:#849bab}.day:last-child{border:0}.day strong{display:block;color:var(--white);font:700 15px var(--mono)}.day span{display:block;margin-top:4px;font:9px var(--mono);text-transform:uppercase}.day.selected{background:#113247;box-shadow:inset 0 -3px var(--sky)}.day.selected strong,.day.selected span{color:var(--cyan)}.day .dot{display:inline-block;width:4px;height:4px;margin-left:6px;border-radius:50%;background:var(--sky);vertical-align:middle}
+    .cal-body{display:grid;grid-template-columns:minmax(0,1.65fr) minmax(250px,.7fr);gap:24px}.day-group{margin-bottom:21px}.day-label{display:flex;align-items:center;gap:10px;margin-bottom:8px;color:var(--sky);font:10px var(--mono);letter-spacing:.12em;text-transform:uppercase}.day-label:after{height:1px;flex:1;background:#294153;content:""}.game{display:grid;grid-template-columns:59px 1fr 70px 1fr 95px;align-items:center;gap:9px;min-height:63px;padding:8px 11px;border-top:1px solid #1b3040}.game:hover{background:#0c1d29}.game-time{color:#a5bac6;font:11px var(--mono)}.game-side{display:flex;align-items:center;gap:8px;color:var(--white);font-size:11px;font-weight:600}.game-side.right{justify-content:flex-end}.club-token{display:grid;place-items:center;width:23px;height:23px;border:1px solid #315368;border-radius:50%;color:var(--cyan);background:#0f2533;font:8px var(--mono)}.game-result{color:#e5f3fa;text-align:center;font:700 13px var(--mono)}.game-league{color:var(--muted);text-align:right;font:9px var(--mono)}.day-aside{padding:17px;border-top:2px solid var(--sky);background:#0d1b28}.day-aside h3{margin:0 0 5px;color:var(--white);font-size:14px}.day-aside>p{margin:0 0 16px;color:var(--muted);font-size:10px;line-height:1.5}.league-count{display:flex;justify-content:space-between;padding:10px 0;border-top:1px solid #203544;color:#b5c8d3;font-size:10px}.league-count b{color:var(--cyan);font:11px var(--mono)}.aside-rule{margin:17px 0;border:0;border-top:1px dashed #315063}.plain-stat{display:flex;align-items:baseline;gap:9px}.plain-stat b{color:var(--white);font:700 30px var(--mono)}.plain-stat span{color:var(--muted);font-size:10px}
+    /* Concept 3: ficha/dossier y análisis central, sin el esqueleto del ejecutable */
+    .dossier-head{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:20px;padding:18px 25px;border-bottom:1px solid var(--line)}.dossier-head .brandline{min-width:225px}.dossier-head .top-nav{margin-left:10px}.dossier-search{display:flex;align-items:center;gap:8px;padding:9px 11px;border:1px solid #294153;color:var(--muted);font-size:10px;min-width:220px}.dossier-search span{color:var(--sky)}
+    .dossier{padding:24px 28px 30px}.dossier-title{display:flex;align-items:end;justify-content:space-between;gap:18px;padding-bottom:19px;border-bottom:1px solid #294153}.dossier-title h2{margin:4px 0 3px;color:var(--white);font-size:35px;font-weight:620;letter-spacing:-.04em}.dossier-title p{margin:0;color:var(--muted);font-size:11px}.team-wordmark{display:flex;align-items:center;gap:11px;color:var(--white);font-size:15px;font-weight:700}.team-wordmark .crest{width:49px;height:49px;border-radius:8px;transform:rotate(-3deg)}
+    .team-meta{display:flex;gap:20px;color:#9db1bd;font:9px var(--mono)}.team-meta b{color:#dbe9f0;font-weight:600}.team-meta span{display:flex;gap:5px;align-items:center}.dossier-layout{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(260px,.68fr);gap:24px;margin-top:19px}.sheet{border-top:2px solid #3d829a;background:#0a1721}.sheet-head{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid #263d4d}.sheet-head b{color:var(--white);font-size:12px}.sheet-head span{color:var(--muted);font:9px var(--mono)}.standings{width:100%;border-collapse:collapse;font-size:10px}.standings th{padding:9px 10px;color:#7f98a8;text-align:left;font:9px var(--mono);letter-spacing:.08em}.standings td{padding:10px;border-top:1px solid #1e3446;color:#bfced7}.standings tr.current td{color:#effbff;background:#102b3a}.standings td:nth-child(n+3),.standings th:nth-child(n+3){text-align:center;font-family:var(--mono)}.standings td:nth-child(3){color:var(--cyan);font-weight:800}.gd.plus{color:var(--green)}.gd.minus{color:var(--red)}
+    .metric-rail{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:#223949;border:1px solid #223949}.metric{padding:11px;background:#0c1924}.metric b{display:block;color:var(--white);font:700 18px var(--mono)}.metric span{display:block;margin-top:4px;color:var(--muted);font-size:9px}.bars{display:grid;gap:10px;padding:14px}.barline{display:grid;grid-template-columns:60px 1fr 30px;align-items:center;gap:9px;color:#a9bdc8;font:9px var(--mono)}.bar{height:4px;background:#1b3040}.bar i{display:block;height:100%;background:var(--sky)}.barline strong{color:var(--white);text-align:right;font-weight:600}.players{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;margin-top:17px;border:1px solid #223949;background:#223949}.player{display:flex;align-items:center;gap:10px;min-height:67px;padding:10px;background:#0a1721}.avatar{display:grid;place-items:center;width:32px;height:32px;border:1px solid #34566a;border-radius:50%;background:#102333;color:var(--cyan);font:9px var(--mono)}.player b{display:block;color:var(--white);font-size:11px;font-weight:650}.player small{display:block;margin-top:3px;color:var(--muted);font-size:9px}.position{margin-left:auto;color:#8da7b5;font:9px var(--mono)}
+    .footnote{padding:12px 16px;border-top:1px solid var(--line);color:#788f9f;background:#07111a;font-size:9px;line-height:1.5}
+    @media(max-width:950px){.shell{width:calc(100% - 24px)}.ed-grid,.cal-body,.dossier-layout{grid-template-columns:1fr}.ed-main{border-right:0;border-bottom:1px solid var(--line)}.ed-header .top-nav,.cal-top .top-nav,.dossier-head .top-nav{display:none}.ed-side{display:grid;grid-template-columns:1fr 1fr;gap:15px}.ed-side .note,.ed-side .score-strip{grid-column:1/-1}.dossier-head{grid-template-columns:1fr auto}.dossier-search{grid-column:1/-1}.metric-rail{grid-template-columns:repeat(2,1fr)}}
+    @media(max-width:620px){.shell{width:calc(100% - 16px);padding-top:16px}.intro{display:block}.demo-flag{display:inline-block;margin-top:12px}.concepts{grid-template-columns:1fr}.concept{min-height:0}.mast{grid-template-columns:1fr;padding:17px}.date-stamp{text-align:left}.ed-header{padding:11px 14px}.ed-main,.ed-side,.cal-wrap,.dossier{padding:16px}.ed-side{grid-template-columns:1fr}.ed-side .note,.ed-side .score-strip{grid-column:auto}.ed-header .brandline{min-width:0}.top-nav{display:none}.search{min-width:0;width:100%}.match-feature{grid-template-columns:1fr auto 1fr;gap:6px}.team-large{gap:6px}.team-large b{font-size:11px}.team-large .crest{width:29px;height:29px}.scorebox .score{font-size:20px}.table th,.table td{padding:8px 5px;font-size:9px}.cal-top{padding:11px 13px}.cal-wrap{padding:15px 10px}.cal-heading{display:block}.cal-heading h2{font-size:29px}.filters{margin-top:12px}.date-ribbon{overflow:auto;grid-template-columns:repeat(7,minmax(50px,1fr))}.day{min-height:59px;padding:7px}.day strong{font-size:13px}.game{grid-template-columns:44px minmax(0,1fr) 50px minmax(0,1fr);gap:5px;padding:8px 4px}.game-league{display:none}.game-side{font-size:9px;gap:4px}.club-token{width:18px;height:18px}.game-result{font-size:11px}.dossier-head{padding:12px;grid-template-columns:1fr}.dossier-search{grid-column:auto}.dossier-title{display:block}.dossier-title h2{font-size:29px}.team-meta{flex-wrap:wrap;gap:8px 14px;margin-top:10px}.dossier-layout{gap:15px}.players{grid-template-columns:1fr}.metric-rail{grid-template-columns:repeat(2,1fr)}.metric{padding:9px}.metric b{font-size:16px}.view-caption{padding:9px 11px;font-size:8px}}
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <header class="intro">
+      <div><div class="eyebrow">Football Analytics Pro · Ronda de diseño</div><h1>Tres maneras nuevas de leer el fútbol</h1><p>La tipografía Segoe UI y la paleta azul/celeste del ejecutable se mantienen. Cambian por completo la composición, el ritmo y la forma de presentar calendario, competición y equipos.</p></div>
+      <div class="demo-flag">MOCKUPS · DATOS DE MUESTRA</div>
+    </header>
+    <nav class="concepts" aria-label="Elegir propuesta">
+      <button class="concept" aria-pressed="true" data-concept="edition"><b>01 · Edición de jornada</b><span>Jerarquía editorial, partido protagonista y tabla como centro de lectura.</span></button>
+      <button class="concept" aria-pressed="false" data-concept="calendar"><b>02 · Agenda abierta</b><span>El calendario ocupa la pantalla; fechas y cruces se recorren de un vistazo.</span></button>
+      <button class="concept" aria-pressed="false" data-concept="dossier"><b>03 · Cuaderno de competición</b><span>Una vista de análisis compacta con tablas, métricas y nombres al frente.</span></button>
+    </nav>
+    <section class="stage" aria-live="polite">
+      <article class="proposal active" id="edition">
+        <div class="view-caption"><span><b>PROPUESTA 01</b> / INICIO EDITORIAL</span><span>ESCRITORIO · 1440 PX</span></div>
+        <header class="ed-header">
+          <div class="brandline"><span class="brand-icon">FAP</span><span><span class="brand-name">Football Analytics Pro</span><span class="brand-note">Fútbol · temporada 2026/27</span></span></div>
+          <nav class="top-nav"><a class="active" href="#">Hoy</a><a href="#">Calendario</a><a href="#">Competiciones</a><a href="#">Análisis</a></nav>
+          <div class="search"><span>⌕</span><span>Buscar club o jugador</span><kbd>⌘ K</kbd></div>
+        </header>
+        <div class="mast"><div><div class="eyebrow">Miércoles · 7 de octubre</div><h2>La jornada, en perspectiva.</h2><p>El fútbol de hoy junto a lo que explica la tabla.</p></div><div class="date-stamp">JORNADA 07<small>ACTUALIZADO 08:00 · HORA LOCAL</small></div></div>
+        <div class="ed-grid">
+          <section class="ed-main">
+            <div class="micro">Partido destacado · Premier League</div>
+            <div class="match-feature">
+              <div class="team-large"><span class="crest">ARS</span><span><b>Arsenal</b><small>Local · 2.º en la tabla</small></span></div>
+              <div class="scorebox"><div class="score">2 — 1</div><small>FINAL · 90+4′</small></div>
+              <div class="team-large away"><span><b>Liverpool</b><small>Visitante · 4.º en la tabla</small></span><span class="crest">LIV</span></div>
+            </div>
+            <div class="section-title"><h3>Premier League</h3><span>Tabla · jornada 7</span></div>
+            <table class="table"><thead><tr><th>POS</th><th>CLUB</th><th class="num">PTS</th><th class="num">PJ</th><th class="num">DG</th><th>FORMA</th></tr></thead><tbody>
+              <tr class="highlight"><td><span class="pos">01</span></td><td><span class="club-name"><span class="crest mini-crest">MCI</span>Manchester City</span></td><td class="num points">18</td><td class="num">7</td><td class="num" style="color:var(--green)">+12</td><td>V V E V V</td></tr>
+              <tr><td><span class="pos">02</span></td><td><span class="club-name"><span class="crest mini-crest">ARS</span>Arsenal</span></td><td class="num points">16</td><td class="num">7</td><td class="num" style="color:var(--green)">+9</td><td>V V V E V</td></tr>
+              <tr><td><span class="pos">03</span></td><td><span class="club-name"><span class="crest mini-crest">LIV</span>Liverpool</span></td><td class="num points">15</td><td class="num">7</td><td class="num" style="color:var(--green)">+8</td><td>V E V V D</td></tr>
+              <tr><td><span class="pos">04</span></td><td><span class="club-name"><span class="crest mini-crest">CHE</span>Chelsea</span></td><td class="num points">13</td><td class="num">7</td><td class="num" style="color:var(--red)">−1</td><td>E V D V V</td></tr>
+            </tbody></table>
+            <div class="section-title"><h3>Lectura rápida</h3><span>En contexto</span></div>
+            <p style="max-width:760px;margin:0;color:#a9bdc8;font-size:12px;line-height:1.65">City sigue primero por diferencia de gol. Arsenal llega con cuatro victorias en cinco partidos; su próximo cruce será fuera de casa, el domingo.</p>
+          </section>
+          <aside class="ed-side">
+            <div><div class="section-title" style="margin-top:0"><h3>Lo que viene</h3><span>Próximos cruces</span></div>
+              <div class="next-row"><span class="next-time">SÁB 10</span><span class="fixture-teams">Tottenham — Aston Villa<small>12:30 · Jornada 8</small></span><span class="tag">PL</span></div>
+              <div class="next-row"><span class="next-time">SÁB 10</span><span class="fixture-teams">Manchester City — Everton<small>15:00 · Jornada 8</small></span><span class="tag">PL</span></div>
+              <div class="next-row"><span class="next-time">DOM 11</span><span class="fixture-teams">Brentford — Arsenal<small>16:30 · Jornada 8</small></span><span class="tag">PL</span></div>
+            </div>
+            <blockquote class="note"><q>El dato se entiende mejor cuando aparece junto al partido que lo produjo.</q><small>NOTA DE PARTIDO · ANÁLISIS FAP</small></blockquote>
+            <div class="score-strip"><div class="score-stat"><b>7</b><span>jornadas</span></div><div class="score-stat"><b>42</b><span>partidos</span></div><div class="score-stat"><b>3.1</b><span>goles / juego</span></div></div>
+          </aside>
+        </div>
+        <div class="footnote">Vista de muestra: equipos, marcadores, tabla y calendario son ilustrativos. Las fichas se abrirían al seleccionar un club o jugador.</div>
+      </article>
+
+      <article class="proposal" id="calendar">
+        <div class="view-caption"><span><b>PROPUESTA 02</b> / CALENDARIO COMO PANTALLA PRINCIPAL</span><span>ESCRITORIO · 1440 PX</span></div>
+        <header class="cal-top"><div class="brandline"><span class="brand-icon">FAP</span><span><span class="brand-name">Football Analytics Pro</span><span class="brand-note">FECHAS · CRUCES · RESULTADOS</span></span></div><nav class="top-nav"><a href="#">Resumen</a><a class="active" href="#">Calendario</a><a href="#">Ligas</a><a href="#">Búsqueda</a></nav><div class="search"><span>⌕</span><span>Equipo o jugador</span><kbd>⌘ K</kbd></div></header>
+        <main class="cal-wrap">
+          <div class="cal-heading"><div><div class="eyebrow">Agenda · semana 41</div><h2>Partidos para seguir.</h2><p>El calendario primero: cada cruce con hora local, jornada y competición.</p></div><div class="filters"><button class="filter">Todas las ligas⌄</button><button class="filter">Todos los estados⌄</button></div></div>
+          <div class="date-ribbon"><div class="day"><span>Lun</span><strong>05</strong></div><div class="day"><span>Mar</span><strong>06</strong></div><div class="day selected"><span>Mié <i class="dot"></i></span><strong>07</strong></div><div class="day"><span>Jue</span><strong>08</strong></div><div class="day"><span>Vie <i class="dot"></i></span><strong>09</strong></div><div class="day"><span>Sáb <i class="dot"></i></span><strong>10</strong></div><div class="day"><span>Dom <i class="dot"></i></span><strong>11</strong></div></div>
+          <div class="cal-body"><section>
+            <div class="day-group"><div class="day-label">Miércoles · 7 octubre · 2 partidos</div>
+              <div class="game"><span class="game-time">18:00</span><span class="game-side"><i class="club-token">RMA</i>Real Madrid</span><span class="game-result">3 — 0</span><span class="game-side right">Valencia<i class="club-token">VAL</i></span><span class="game-league">LaLiga<br>Jornada 7</span></div>
+              <div class="game"><span class="game-time">20:45</span><span class="game-side"><i class="club-token">INT</i>Inter</span><span class="game-result">1 — 1</span><span class="game-side right">Roma<i class="club-token">ROM</i></span><span class="game-league">Serie A<br>Jornada 7</span></div>
+            </div>
+            <div class="day-group"><div class="day-label">Viernes · 9 octubre · 3 partidos</div>
+              <div class="game"><span class="game-time">17:30</span><span class="game-side"><i class="club-token">PSV</i>PSV</span><span class="game-result">— : —</span><span class="game-side right">Ajax<i class="club-token">AJA</i></span><span class="game-league">Eredivisie<br>Jornada 9</span></div>
+              <div class="game"><span class="game-time">20:00</span><span class="game-side"><i class="club-token">BAY</i>Bayern München</span><span class="game-result">— : —</span><span class="game-side right">Dortmund<i class="club-token">BVB</i></span><span class="game-league">Bundesliga<br>Jornada 8</span></div>
+              <div class="game"><span class="game-time">21:00</span><span class="game-side"><i class="club-token">OM</i>Marseille</span><span class="game-result">— : —</span><span class="game-side right">Lyon<i class="club-token">OL</i></span><span class="game-league">Ligue 1<br>Jornada 8</span></div>
+            </div>
+            <div class="day-group"><div class="day-label">Sábado · 10 octubre · 5 partidos</div>
+              <div class="game"><span class="game-time">12:30</span><span class="game-side"><i class="club-token">TOT</i>Tottenham</span><span class="game-result">— : —</span><span class="game-side right">Aston Villa<i class="club-token">AVL</i></span><span class="game-league">Premier League<br>Jornada 8</span></div>
+              <div class="game"><span class="game-time">15:00</span><span class="game-side"><i class="club-token">MCI</i>Man City</span><span class="game-result">— : —</span><span class="game-side right">Everton<i class="club-token">EVE</i></span><span class="game-league">Premier League<br>Jornada 8</span></div>
+            </div>
+          </section><aside class="day-aside"><div class="micro">Esta semana</div><h3>10 ligas en agenda</h3><p>Una semana clara, sin llenar la pantalla de tarjetas iguales. Abrí un partido para ver su ficha y estadísticas.</p><div class="league-count"><span>Premier League</span><b>10</b></div><div class="league-count"><span>LaLiga</span><b>8</b></div><div class="league-count"><span>Serie A</span><b>10</b></div><div class="league-count"><span>Bundesliga</span><b>9</b></div><div class="league-count"><span>Otras competiciones</span><b>23</b></div><hr class="aside-rule"><div class="plain-stat"><b>60</b><span>partidos<br>en la semana</span></div></aside></div>
+        </main><div class="footnote">Vista de muestra: el selector, los días y cada partido son elementos de demostración; los nombres de club se podrían abrir para ver sus fichas.</div>
+      </article>
+
+      <article class="proposal" id="dossier">
+        <div class="view-caption"><span><b>PROPUESTA 03</b> / CUADERNO DE COMPETICIÓN</span><span>ESCRITORIO · 1440 PX</span></div>
+        <header class="dossier-head"><div class="brandline"><span class="brand-icon">FAP</span><span><span class="brand-name">Football Analytics Pro</span><span class="brand-note">DATOS PARA LEER EL JUEGO</span></span></div><nav class="top-nav"><a href="#">Inicio</a><a href="#">Calendario</a><a class="active" href="#">Competiciones</a><a href="#">Buscar</a></nav><div class="dossier-search"><span>⌕</span>Club, liga o jugador <span style="margin-left:auto;color:#6f8798;font:9px var(--mono)">CTRL K</span></div></header>
+        <main class="dossier">
+          <div class="dossier-title"><div><div class="eyebrow">Inglaterra · primera división · 2026/27</div><h2>La liga, leída de cerca.</h2><p>Tabla, rendimiento colectivo y protagonistas de la fecha.</p></div><div class="date-stamp">DESPUÉS DE J7<small>38 JORNADAS · 20 CLUBES</small></div></div>
+          <div class="dossier-layout"><section>
+            <div class="sheet"><div class="sheet-head"><b>Posiciones</b><span>JORNADA 07 · TEMPORADA ACTUAL</span></div><table class="standings"><thead><tr><th>#</th><th>Equipo</th><th>Pts</th><th>PJ</th><th>GF</th><th>GC</th><th>DG</th></tr></thead><tbody>
+              <tr class="current"><td>01</td><td><span class="club-name"><span class="crest mini-crest">MCI</span>Manchester City</span></td><td>18</td><td>7</td><td>20</td><td>8</td><td class="gd plus">+12</td></tr>
+              <tr><td>02</td><td><span class="club-name"><span class="crest mini-crest">ARS</span>Arsenal</span></td><td>16</td><td>7</td><td>17</td><td>8</td><td class="gd plus">+9</td></tr>
+              <tr><td>03</td><td><span class="club-name"><span class="crest mini-crest">LIV</span>Liverpool</span></td><td>15</td><td>7</td><td>18</td><td>10</td><td class="gd plus">+8</td></tr>
+              <tr><td>04</td><td><span class="club-name"><span class="crest mini-crest">CHE</span>Chelsea</span></td><td>13</td><td>7</td><td>12</td><td>13</td><td class="gd minus">−1</td></tr>
+            </tbody></table></div>
+            <div class="section-title"><h3>El próximo capítulo</h3><span>Sábado · Jornada 8</span></div>
+            <div class="sheet"><div class="sheet-head"><b>Brentford vs Arsenal</b><span>16:30 · GTECH COMMUNITY STADIUM</span></div><div class="metric-rail"><div class="metric"><b>4</b><span>victorias · Arsenal</span></div><div class="metric"><b>1</b><span>empate · últimos 5</span></div><div class="metric"><b>11</b><span>goles a favor</span></div><div class="metric"><b>4</b><span>goles recibidos</span></div></div></div>
+          </section><aside>
+            <div class="sheet"><div class="sheet-head"><b>Rendimiento</b><span>MEDIA POR PARTIDO</span></div><div class="bars"><div class="barline"><span>Goles</span><div class="bar"><i style="width:78%"></i></div><strong>2.6</strong></div><div class="barline"><span>Córners</span><div class="bar"><i style="width:62%"></i></div><strong>5.8</strong></div><div class="barline"><span>Amarillas</span><div class="bar"><i style="width:42%"></i></div><strong>2.1</strong></div><div class="barline"><span>Rojas</span><div class="bar"><i style="width:12%;background:var(--red)"></i></div><strong>0.2</strong></div></div></div>
+            <div class="section-title"><h3>Nombres de la fecha</h3><span>Goles</span></div><div class="sheet"><div class="player"><span class="avatar">EH</span><span><b>Erling Haaland</b><small>Manchester City · Noruega</small></span><span class="position">8 G</span></div><div class="player"><span class="avatar">MS</span><span><b>Mohamed Salah</b><small>Liverpool · Egipto</small></span><span class="position">6 G</span></div><div class="player"><span class="avatar">BC</span><span><b>Cole Palmer</b><small>Chelsea · Inglaterra</small></span><span class="position">5 G</span></div></div>
+          </aside></div>
+          <section class="players"><div class="player"><span class="avatar">ARS</span><span><b>Arsenal</b><small>Club · ficha completa</small></span><span class="position">↗</span></div><div class="player"><span class="avatar">MCI</span><span><b>Manchester City</b><small>Club · ficha completa</small></span><span class="position">↗</span></div><div class="player"><span class="avatar">EH</span><span><b>Erling Haaland</b><small>Jugador · ficha completa</small></span><span class="position">↗</span></div></section>
+        </main><div class="footnote">Vista de muestra: estadísticas ilustrativas. El encabezado y la disposición no replican el ejecutable; solo conservan su fuente Segoe UI y sus colores base.</div>
+      </article>
+    </section>
+    <p style="margin:13px 1px 0;color:#71899a;font-size:10px;line-height:1.55">Los escudos se representan con iniciales únicamente en esta maqueta; no son insignias oficiales. Las propuestas están separadas de la interfaz y de los datos de producción.</p>
+  </main>
+  <script>
+    const buttons=[...document.querySelectorAll('.concept')], proposals=[...document.querySelectorAll('.proposal')];
+    buttons.forEach(button=>button.addEventListener('click',()=>{
+      buttons.forEach(item=>item.setAttribute('aria-pressed',String(item===button)));
+      proposals.forEach(item=>item.classList.toggle('active',item.id===button.dataset.concept));
+    }));
+  </script>
+</body>
+</html>

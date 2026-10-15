@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#07111b">
+  <title>Football Analytics Pro — conceptos web dark</title>
+  <style>
+    :root { color-scheme: dark; font-family: Inter, "Segoe UI", system-ui, sans-serif; }
+    * { box-sizing: border-box; }
+    body { margin: 0; padding: 24px; color: #e5eef5; background: #050c13; }
+    button { color: inherit; font: inherit; cursor: pointer; }
+    .gallery { max-width: 1540px; margin: auto; }
+    .intro { display: flex; align-items: end; justify-content: space-between; gap: 24px; margin: 4px 2px 19px; }
+    .eyebrow { margin: 0 0 7px; color: #6fd4ee; font-size: 10px; font-weight: 850; letter-spacing: .18em; text-transform: uppercase; }
+    h1 { margin: 0; font-size: clamp(25px,3vw,36px); letter-spacing: -.045em; }
+    .intro p:last-child { max-width: 720px; margin: 8px 0 0; color: #91a6b7; font-size: 13px; line-height: 1.55; }
+    .sample { flex: none; padding: 8px 11px; border: 1px solid #263d50; border-radius: 999px; color: #9fb4c4; background: #0b1722; font-size: 10px; font-weight: 750; }
+    .concepts { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 10px; margin-bottom: 13px; }
+    .concept { min-height: 83px; padding: 13px 15px; text-align: left; border: 1px solid #203548; border-radius: 9px; background: #0a151f; transition: .16s ease; }
+    .concept:hover { transform: translateY(-2px); border-color: #387694; }
+    .concept[aria-pressed="true"] { border-color: var(--cyan,#62d0e9); background: #0f2636; box-shadow: 0 0 0 1px #62d0e933; }
+    .concept b { display: block; margin-bottom: 5px; color: #e5f1f7; font-size: 13px; }
+    .concept span { color: #91a5b5; font-size: 11px; line-height: 1.45; }
+    .screen-switch { display: flex; gap: 6px; overflow-x: auto; margin: 0 0 10px; padding-bottom: 2px; }
+    .screen-switch button { flex: none; padding: 7px 10px; border: 1px solid #243b4d; border-radius: 5px; color: #a9bbc9; background: #0a151f; font-size: 10px; }
+    .screen-switch button[aria-pressed="true"] { color: #06141d; border-color: var(--cyan,#62d0e9); background: var(--cyan,#62d0e9); font-weight: 800; }
+    .preview { overflow: hidden; border: 1px solid #23394a; border-radius: 10px; background: var(--surface,#0b1925); box-shadow: 0 24px 70px #0008; }
+    .app { --bg:#08131e; --surface:#0b1a27; --surface2:#102332; --line:#1d3547; --text:#e1ebf2; --muted:#8ca2b3; --blue:#126d9b; --cyan:#5ed0e9; --green:#42d49a; --red:#ff7885; --amber:#f1bd58; --radius:7px; min-height:720px; color:var(--text); background:var(--bg); }
+    .topbar { position:relative; z-index:2; display:flex; align-items:center; gap:14px; height:63px; padding:0 19px; border-bottom:1px solid var(--line); background:var(--surface); }
+    .menu-toggle { display:grid; place-items:center; flex:none; width:34px; height:34px; border:1px solid var(--line); border-radius:6px; color:var(--cyan); background:var(--surface2); font-size:16px; }
+    .brand { display:flex; align-items:center; gap:9px; min-width:218px; }
+    .brand-mark { display:grid; place-items:center; width:32px; height:32px; border-radius:6px; color:#06131b; background:linear-gradient(145deg,var(--cyan),var(--blue)); font-size:10px; font-weight:950; }
+    .brand-name { font-size:12px; font-weight:850; letter-spacing:-.02em; }
+    .brand-caption { margin-top:2px; color:var(--muted); font-size:8px; letter-spacing:.12em; text-transform:uppercase; }
+    .search { display:flex; align-items:center; gap:8px; width:min(370px,35vw); height:34px; margin-left:auto; padding:0 10px; border:1px solid var(--line); border-radius:6px; color:var(--muted); background:var(--bg); font-size:10px; cursor:pointer; }
+    .search span:first-child { color:var(--cyan); font-size:15px; }
+    .search-key { margin-left:auto; color:#6e8496; font-size:8px; }
+    .user-chip { display:grid; place-items:center; flex:none; width:29px; height:29px; border:1px solid #31536b; border-radius:50%; color:var(--cyan); background:#122b3b; font-size:9px; font-weight:850; }
+    .layout { display:grid; grid-template-columns:195px minmax(0,1fr); min-height:657px; transition:grid-template-columns .18s ease; }
+    .app.collapsed .layout { grid-template-columns:62px minmax(0,1fr); }
+    .sidebar { display:flex; flex-direction:column; gap:4px; padding:15px 9px; border-right:1px solid var(--line); background:#091722; }
+    .side-heading { margin:2px 9px 8px; color:#71899b; font-size:8px; font-weight:850; letter-spacing:.15em; text-transform:uppercase; }
+    .nav-item { display:flex; align-items:center; gap:10px; height:36px; padding:0 9px; border:1px solid transparent; border-radius:5px; color:#9aafbf; background:transparent; text-align:left; font-size:10px; font-weight:650; white-space:nowrap; }
+    .nav-item:hover { color:var(--text); background:var(--surface2); }
+    .nav-item.active { color:var(--cyan); border-color:#1d4055; background:#112b3c; }
+    .nav-icon { display:grid; place-items:center; flex:none; width:18px; font-size:14px; }
+    .app.collapsed .side-heading,.app.collapsed .nav-label,.app.collapsed .season-card { display:none; }
+    .app.collapsed .nav-item { justify-content:center; padding:0; }
+    .season-card { margin-top:auto; padding:11px; border:1px solid var(--line); border-radius:6px; color:var(--muted); background:#0c1c29; font-size:9px; line-height:1.6; }
+    .season-card b { color:var(--text); }
+    .content { min-width:0; padding:23px clamp(16px,2.5vw,34px) 30px; }
+    .page-head { display:flex; align-items:end; justify-content:space-between; gap:15px; margin-bottom:18px; }
+    .kicker { margin-bottom:6px; color:var(--cyan); font-size:8px; font-weight:900; letter-spacing:.16em; text-transform:uppercase; }
+    h2 { margin:0; color:#edf5fa; font-size:clamp(21px,2.2vw,28px); font-weight:820; letter-spacing:-.045em; }
+    .sub { margin:5px 0 0; color:var(--muted); font-size:10px; }
+    .filter { padding:8px 10px; border:1px solid var(--line); border-radius:5px; color:#bed0dc; background:var(--surface); font-size:9px; }
+    .card { min-width:0; overflow:hidden; border:1px solid var(--line); border-radius:var(--radius); background:var(--surface); }
+    .card-head { display:flex; align-items:center; justify-content:space-between; gap:10px; padding:12px 14px; border-bottom:1px solid var(--line); }
+    .card-title { font-size:10px; font-weight:850; letter-spacing:.01em; }
+    .card-meta { color:var(--muted); font-size:8px; }
+    .grid-two { display:grid; grid-template-columns:minmax(0,1.55fr) minmax(235px,.8fr); gap:12px; }
+    .stack { display:grid; align-content:start; gap:12px; }
+    .club { display:flex; align-items:center; gap:7px; min-width:0; color:var(--text); font-size:9px; font-weight:760; }
+    .club img { flex:none; width:23px; height:23px; object-fit:contain; }
+    .club span { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .match-hero { position:relative; overflow:hidden; padding:22px; border:1px solid #23516a; border-radius:var(--radius); background:radial-gradient(ellipse at 52% 145%,#0e6883 0,transparent 52%),linear-gradient(115deg,#0b2638,#0d3d56 58%,#0b2131); }
+    .match-hero:before { position:absolute; right:-24px; bottom:-115px; width:270px; height:270px; border:1px solid #74d8ee2d; border-radius:50%; content:""; box-shadow:0 0 0 28px #74d8ee0d,0 0 0 57px #74d8ee09; }
+    .hero-top { position:relative; display:flex; justify-content:space-between; color:#b5d8e5; font-size:8px; font-weight:800; letter-spacing:.1em; text-transform:uppercase; }
+    .hero-match { position:relative; display:grid; grid-template-columns:1fr auto 1fr; align-items:center; gap:12px; margin:23px 0 20px; }
+    .hero-match .club { font-size:14px; }
+    .hero-match .club img { width:42px; height:42px; }
+    .hero-match .club:last-child { flex-direction:row-reverse; text-align:right; }
+    .hero-time { color:#d4f4fb; font-size:11px; font-weight:850; text-align:center; }
+    .hero-time small { display:block; margin-top:3px; color:#91bdce; font-size:8px; font-weight:600; }
+    .hero-bottom { position:relative; display:flex; flex-wrap:wrap; gap:13px; color:#bad5df; font-size:8px; }
+    .table { width:100%; border-collapse:collapse; font-size:9px; }
+    .table th { padding:9px 9px; color:#8298a9; background:#102230; font-size:7px; font-weight:850; letter-spacing:.1em; text-align:left; text-transform:uppercase; }
+    .table td { padding:9px; border-top:1px solid var(--line); color:#cad7e0; }
+    .table td.center { color:var(--muted); text-align:center; }
+    .table tr:hover td { background:#112738; }
+    .table .pts { color:#effbff; background:#143042; font-size:10px; font-weight:950; }
+    .table .gf { color:var(--green); font-weight:800; }
+    .table .gc { color:var(--red); font-weight:800; }
+    .table .gd-zero { color:#edf4f8; font-weight:800; }
+    .table .gd-pos { color:var(--green); font-weight:850; }
+    .table .gd-neg { color:var(--red); font-weight:850; }
+    .form { display:flex; gap:3px; }
+    .form i { display:grid; place-items:center; width:15px; height:15px; border-radius:3px; color:#fff; font-size:7px; font-style:normal; font-weight:900; }
+    .win { background:#21865f; } .draw { background:#a47b22; } .loss { background:#ae4653; }
+    .stats { display:grid; grid-template-columns:repeat(3,1fr); gap:6px; padding:11px; }
+    .stat { padding:9px; border-radius:5px; background:var(--surface2); }
+    .stat b { display:block; font-size:19px; letter-spacing:-.05em; }
+    .stat span { color:var(--muted); font-size:8px; }
+    .fixture { display:grid; grid-template-columns:46px minmax(0,1fr) 50px minmax(0,1fr); align-items:center; gap:8px; padding:10px 12px; border-bottom:1px solid var(--line); }
+    .fixture:last-child { border-bottom:0; }
+    .fixture-time { color:#a4b5c2; font-size:8px; font-variant-numeric:tabular-nums; }
+    .score { color:#e5f3fa; font-size:10px; font-weight:900; text-align:center; }
+    .fixture-comp { grid-column:2/-1; margin-top:-4px; color:#71899a; font-size:7px; }
+    .week-strip { display:grid; grid-template-columns:repeat(7,minmax(0,1fr)); gap:5px; margin:0 0 12px; }
+    .day-chip { display:flex; flex-direction:column; align-items:center; gap:4px; min-width:0; padding:9px 5px; border:1px solid var(--line); border-radius:5px; color:var(--muted); background:var(--surface); }
+    .day-chip span { font-size:7px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; }
+    .day-chip b { color:var(--text); font-size:14px; }
+    .day-chip small { color:#6d8799; font-size:7px; }
+    .day-chip.active { border-color:#3f9ab7; background:#103044; box-shadow:inset 0 -2px var(--cyan); }
+    .day-title { display:flex; align-items:center; gap:9px; padding:10px 12px; color:#deebf2; background:#0d202e; font-size:9px; font-weight:850; }
+    .day-title time { color:var(--cyan); font-size:8px; letter-spacing:.08em; }
+    .calendar-list { display:grid; gap:9px; }
+    .calendar-day { overflow:hidden; border:1px solid var(--line); border-radius:var(--radius); background:var(--surface); }
+    .calendar-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px; }
+    .calendar-grid .calendar-day { min-height:150px; }
+    .day-empty { padding:18px 12px; color:#71889a; font-size:8px; }
+    .badge { display:inline-block; padding:4px 6px; border:1px solid #244559; border-radius:99px; color:#83cde0; background:#102638; font-size:7px; font-weight:800; letter-spacing:.07em; text-transform:uppercase; }
+    .live { color:#ff9b7d; border-color:#674235; background:#301c1a; }
+    .result-card { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:13px 14px; border-bottom:1px solid var(--line); }
+    .result-card:last-child { border:0; }
+    .result-type { margin-bottom:4px; color:var(--cyan); font-size:7px; font-weight:900; letter-spacing:.12em; text-transform:uppercase; }
+    .result-name { color:#f0f6fa; font-size:12px; font-weight:850; }
+    .result-meta { margin-top:4px; color:var(--muted); font-size:8px; }
+    .club-mark { display:flex; align-items:center; gap:7px; }
+    .club-mark img { width:22px; height:22px; object-fit:contain; }
+    .open { padding:6px 9px; border:1px solid #315168; border-radius:4px; color:var(--cyan); background:#0e2635; font-size:8px; font-weight:800; white-space:nowrap; }
+    .team-banner { display:flex; align-items:center; gap:16px; padding:18px; border-bottom:1px solid var(--line); background:linear-gradient(105deg,#102b3d,#0d3b52); }
+    .team-banner img { width:56px; height:56px; padding:5px; border-radius:8px; object-fit:contain; background:#f2f7fa; }
+    .team-banner h3 { margin:0; color:#f0f8fc; font-size:21px; letter-spacing:-.04em; }
+    .team-banner p { margin:5px 0 0; color:#a2bfce; font-size:8px; }
+    .tabs { display:flex; gap:16px; padding:0 14px; border-bottom:1px solid var(--line); }
+    .tabs span { padding:10px 1px; color:var(--muted); font-size:8px; }
+    .tabs .selected { color:var(--cyan); border-bottom:2px solid var(--cyan); font-weight:850; }
+    .squad { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); }
+    .player { padding:9px 12px; border-bottom:1px solid var(--line); }
+    .player b { display:block; color:#e6f0f5; font-size:9px; }
+    .player small { color:var(--muted); font-size:7px; }
+    .note { margin:10px 2px 0; color:#758b9c; font-size:8px; line-height:1.45; }
+    .design-notes { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:9px; margin-top:11px; }
+    .design-note { padding:11px 13px; border:1px solid #1d3345; border-radius:6px; color:#9aafbe; background:#09151f; font-size:9px; line-height:1.5; }
+    .design-note b { display:block; margin-bottom:3px; color:#dceaf1; font-size:10px; }
+    .footer { margin:10px 3px 0; color:#73899a; font-size:9px; line-height:1.5; }
+    .app[data-theme="matchday"] { --bg:#071018; --surface:#0a1722; --surface2:#102330; --line:#233441; --cyan:#87d8ec; --radius:3px; }
+    .app[data-theme="matchday"] .content { padding:25px clamp(18px,3vw,42px); }
+    .app[data-theme="matchday"] h2 { font-family:Georgia,"Times New Roman",serif; font-size:clamp(25px,3vw,36px); font-weight:500; letter-spacing:-.035em; }
+    .app[data-theme="matchday"] .calendar-grid { display:block; }
+    .app[data-theme="matchday"] .calendar-grid .calendar-day { min-height:0; margin-bottom:9px; }
+    .app[data-theme="matchday"] .match-hero { padding:30px; border-radius:3px; }
+    .app[data-theme="matchday"] .hero-match { margin:30px auto 24px; max-width:750px; }
+    .app[data-theme="matchday"] .hero-match .club { font-family:Georgia,serif; font-size:18px; }
+    .app[data-theme="blueprint"] { --bg:#0b1218; --surface:#101a22; --surface2:#162731; --line:#2b3d48; --cyan:#a3e3ee; --green:#54d6a0; --red:#ff777c; --radius:2px; }
+    .app[data-theme="blueprint"] .layout { grid-template-columns:68px minmax(0,1fr); }
+    .app[data-theme="blueprint"] .side-heading,.app[data-theme="blueprint"] .nav-label,.app[data-theme="blueprint"] .season-card { display:none; }
+    .app[data-theme="blueprint"] .nav-item { justify-content:center; padding:0; }
+    .app[data-theme="blueprint"] .content { background-image:linear-gradient(#69c9df08 1px,transparent 1px),linear-gradient(90deg,#69c9df08 1px,transparent 1px); background-size:24px 24px; }
+    .app[data-theme="blueprint"] .card { box-shadow:none; }
+    .app[data-theme="blueprint"] .card-head { border-left:2px solid var(--cyan); }
+    .app[data-theme="blueprint"] .table th,.app[data-theme="blueprint"] .table td.center,.app[data-theme="blueprint"] .stat b { font-family:Consolas,monospace; }
+    .app[data-theme="blueprint"] .calendar-grid { grid-template-columns:repeat(7,minmax(0,1fr)); gap:4px; }
+    .app[data-theme="blueprint"] .calendar-grid .fixture { grid-template-columns:1fr; gap:5px; padding:8px; }
+    .app[data-theme="blueprint"] .calendar-grid .fixture .club { font-size:7px; }
+    .app[data-theme="blueprint"] .calendar-grid .fixture .score { text-align:left; }
+    .app[data-theme="blueprint"] .calendar-grid .fixture .fixture-comp { grid-column:1; }
+    .app[data-theme="hybrid"] { --bg:#0b1218; --surface:#101a22; --surface2:#162731; --line:#2b3d48; --cyan:#a3e3ee; --green:#54d6a0; --red:#ff777c; --radius:4px; }
+    .app[data-theme="hybrid"] .content { background-image:linear-gradient(#69c9df08 1px,transparent 1px),linear-gradient(90deg,#69c9df08 1px,transparent 1px); background-size:24px 24px; }
+    .app[data-theme="hybrid"] .card { box-shadow:none; }
+    .app[data-theme="hybrid"] .card-head { border-left:2px solid var(--cyan); }
+    .app[data-theme="hybrid"] .table th,.app[data-theme="hybrid"] .table td.center,.app[data-theme="hybrid"] .stat b { font-family:Consolas,monospace; }
+    .app[data-theme="hybrid"] .match-hero { border-radius:4px; }
+    @media (max-width:900px) {
+      body { padding:14px; }
+      .intro { align-items:start; }
+      .concepts,.design-notes { grid-template-columns:1fr; }
+      .layout,.app.collapsed .layout,.app[data-theme="blueprint"] .layout { grid-template-columns:1fr; }
+      .sidebar { display:none; position:absolute; z-index:5; width:210px; min-height:500px; box-shadow:0 15px 35px #0009; }
+      .app.menu-open .sidebar { display:flex; }
+      .app.collapsed .side-heading,.app.collapsed .nav-label,.app.collapsed .season-card { display:initial; }
+      .app.collapsed .nav-item { justify-content:flex-start; padding:0 9px; }
+      .app[data-theme="blueprint"] .sidebar .side-heading,.app[data-theme="blueprint"] .sidebar .nav-label { display:initial; }
+      .app[data-theme="blueprint"] .sidebar .nav-item { justify-content:flex-start; padding:0 9px; }
+      .grid-two { grid-template-columns:1fr; }
+      .calendar-grid,.app[data-theme="blueprint"] .calendar-grid { grid-template-columns:1fr; }
+      .calendar-grid .calendar-day { min-height:0; }
+      .app[data-theme="blueprint"] .calendar-grid .fixture { grid-template-columns:46px minmax(0,1fr) 50px minmax(0,1fr); }
+      .app[data-theme="blueprint"] .calendar-grid .fixture .fixture-comp { grid-column:2/-1; }
+      .app[data-theme="blueprint"] .calendar-grid .fixture .score { text-align:center; }
+      .brand { min-width:0; }
+      .search { width:auto; flex:1; }
+      .search-key,.user-chip { display:none; }
+      .topbar { gap:8px; padding:0 10px; }
+      .content { padding:18px 12px 24px; }
+      .week-strip { grid-template-columns:repeat(7,minmax(39px,1fr)); overflow:auto; }
+      .fixture { grid-template-columns:39px minmax(0,1fr) 42px minmax(0,1fr); gap:5px; padding:9px 8px; }
+    }
+    @media (max-width:520px) {
+      body { padding:9px; }
+      .intro { display:block; }
+      .sample { display:inline-block; margin-top:10px; }
+      .brand-caption { display:none; }
+      .brand-name { font-size:10px; }
+      .brand-mark { width:29px; height:29px; }
+      .topbar { height:55px; }
+      .menu-toggle { width:30px; height:30px; }
+      .search { height:31px; font-size:8px; }
+      .hero-match .club { font-size:9px; }
+      .hero-match .club img { width:30px; height:30px; }
+      .match-hero { padding:15px; }
+      .squad { grid-template-columns:1fr; }
+      .table th,.table td { padding:7px 5px; }
+      .table { font-size:8px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="gallery">
+    <header class="intro"><div><p class="eyebrow">Football Analytics Pro · propuesta elegida</p><h1>Pizarra híbrida · control + blueprint</h1><p>Composición de control con agenda y resumen en dos columnas, combinada con la retícula táctica, las cifras técnicas y las líneas de blueprint. Inicio, calendario, competición, equipo y búsqueda comparten el mismo lenguaje visual.</p></div><span class="sample">DARK · DATOS DE MUESTRA</span></header>
+    <section class="concepts">
+      <button class="concept" data-theme-choice="hybrid" aria-pressed="true"><b>Híbrido · 01 + 03</b><span>Agenda premium, retícula sutil, tabla técnica y cifras monoespaciadas.</span></button>
+      <button class="concept" data-theme-choice="control" aria-pressed="false"><b>01 · Pizarra de control</b><span>Dashboard ágil, calendario semanal por días y panel lateral de seguimiento.</span></button>
+      <button class="concept" data-theme-choice="matchday" aria-pressed="false"><b>02 · Crónica de jornada</b><span>Más editorial: el partido y la fecha guían el recorrido, con resultados en una línea temporal.</span></button>
+      <button class="concept" data-theme-choice="blueprint" aria-pressed="false"><b>03 · Blueprint de competición</b><span>Retícula técnica, riel de navegación y calendario en matriz para comparar fechas de un vistazo.</span></button>
+    </section>
+    <nav class="screen-switch" aria-label="Cambiar pantalla"><button data-screen="home" aria-pressed="true">Inicio</button><button data-screen="calendar" aria-pressed="false">Calendario</button><button data-screen="competition" aria-pressed="false">Competición</button><button data-screen="team" aria-pressed="false">Equipo</button><button data-screen="search" aria-pressed="false">Búsqueda</button></nav>
+    <section class="preview"><div class="app" id="app" data-theme="hybrid"></div></section>
+    <section class="design-notes" id="notes"></section>
+    <p class="footer">Las fechas, estadísticas y marcadores son demostrativos, no datos conectados. Los escudos usan URL ya existentes en el catálogo local; si el servidor de origen no responde, se marca como pendiente. La propuesta sirve para elegir el lenguaje visual antes de adaptarlo al ejecutable y a la futura versión web.</p>
+  </main>
+  <script>
+    const clubs={
+      arsenal:{name:"Arsenal FC",crest:"https://crests.football-data.org/57.png"},
+      city:{name:"Manchester City FC",crest:"https://crests.football-data.org/65.png"},
+      liverpool:{name:"Liverpool FC",crest:"https://crests.football-data.org/64.png"},
+      real:{name:"Real Madrid CF",crest:"https://crests.football-data.org/86.png"},
+      inter:{name:"FC Internazionale Milano",crest:"https://crests.football-data.org/108.png"},
+      milan:{name:"AC Milan",crest:"https://crests.football-data.org/98.png"},
+      barca:{name:"FC Barcelona",crest:"https://upload.wikimedia.org/wikipedia/en/thumb/4/47/FC_Barcelona_%28crest%29.svg/960px-FC_Barcelona_%28crest%29.svg.png"},
+      villa:{name:"Aston Villa FC",crest:"https://crests.football-data.org/58.png"},
+      manutd:{name:"Manchester United FC",crest:"https://upload.wikimedia.org/wikipedia/de/d/da/Manchester_United_FC.svg"}
+    };
+    const notes={
+      hybrid:["Pizarra híbrida · control + blueprint","Azul grafito y cian frío, contraste dark, jerarquía editorial y datos monoespaciados.","Inicio con partido destacado, posiciones, agenda diaria y resumen semanal en dos columnas."],
+      control:["Pizarra de control","Azul profundo con líneas celestes, sans moderna y números de lectura rápida.","Dos columnas en Inicio; calendario semanal agrupado por jornada con resumen lateral."],
+      matchday:["Crónica de jornada","Negro azulado, petróleo y celeste suave. Titulares serif con controles compactos.","La fecha, el estadio y el cruce reciben más espacio; los partidos se leen como una secuencia editorial."],
+      blueprint:["Blueprint de competición","Grafito oscuro, cian frío y trazos de retícula. Cifras monoespaciadas.","La navegación se reduce a un riel y el calendario se organiza como matriz comparativa." ]
+    };
+    let theme="hybrid", screen="home", collapsed=false;
+    const crest=(key)=>`<img src="${clubs[key].crest}" alt="Escudo de ${clubs[key].name}" onerror="this.replaceWith(Object.assign(document.createElement('span'),{textContent:'escudo pendiente',className:'card-meta'}))">`;
+    const club=(key)=>`<span class="club">${crest(key)}<span>${clubs[key].name}</span></span>`;
+    const nav=(key,icon,label)=>`<button class="nav-item ${screen===key?'active':''}" data-nav="${key}"><span class="nav-icon">${icon}</span><span class="nav-label">${label}</span></button>`;
+    function header(){return `<header class="topbar"><button class="menu-toggle" id="toggle" aria-label="Abrir menú lateral">☰</button><div class="brand"><span class="brand-mark">FAP</span><span><span class="brand-name">Football Analytics Pro</span><span class="brand-caption">ANÁLISIS · TEMPORADA 26/27</span></span></div><div class="search" id="searchOpen"><span>⌕</span><span>Buscar jugador o equipo…</span><small class="search-key">Ctrl K</small></div><span class="user-chip">BA</span></header>`;}
+    function shell(body){return `${header()}<div class="layout"><aside class="sidebar"><div class="side-heading">Seguimiento</div>${nav('home','◫','Inicio')}${nav('calendar','▦','Calendario')}${nav('competition','◷','Competiciones')}${nav('statistics','▤','Estadísticas')}<div class="season-card"><b>2026 / 27</b><br>8 competiciones<br>Actualizado · 08:00</div></aside><main class="content">${body}</main></div>`;}
+    function pageHead(kicker,title,sub,filter='TEMPORADA 26/27'){return `<header class="page-head"><div><div class="kicker">${kicker}</div><h2>${title}</h2><p class="sub">${sub}</p></div><button class="filter">${filter}　⌄</button></header>`;}
+    function table(rows,home=false){return `<table class="table"><thead><tr><th>Pts</th><th>#</th><th>Club</th><th>PJ</th><th>GF</th><th>GC</th><th>DG</th><th>Forma</th></tr></thead><tbody>${rows.map((r,i)=>`<tr><td class="pts">${r[1]}</td><td class="center">0${i+1}</td><td>${club(r[0])}</td><td class="center">${r[5]}</td><td class="center gf">${r[3]}</td><td class="center gc">${r[4]}</td><td class="center ${r[3]-r[4]>0?'gd-pos':r[3]-r[4]<0?'gd-neg':'gd-zero'}">${r[3]-r[4]>0?'+':''}${r[3]-r[4]}</td><td><span class="form"><i class="win">V</i><i class="win">V</i><i class="draw">E</i><i class="win">V</i><i class="loss">D</i></span></td></tr>`).join('')}</tbody></table>`;}
+    const standings=[['arsenal',18,21,8,7],['city',16,18,7,7],['liverpool',15,17,8,7],['villa',14,15,9,7]];
+    const match=(time,a,score,b,comp,meta='')=>`<div class="fixture"><time class="fixture-time">${time}</time>${club(a)}<span class="score">${score}</span>${club(b)}<span class="fixture-comp">${comp}${meta?` · ${meta}`:''}</span></div>`;
+    function home(){return `${pageHead('MIÉRCOLES · 7 OCT','La jornada, en contexto','Partidos destacados y forma reciente, en una sola mirada.','HOY　⌄')}<div class="grid-two"><div class="stack"><section class="match-hero"><div class="hero-top"><span>ENCUENTRO DESTACADO · PREMIER LEAGUE</span><span class="badge live">EN VIVO</span></div><div class="hero-match">${club('arsenal')}<div class="hero-time">17:30<small>JORNADA 8 · EMIRATES</small></div>${club('city')}</div><div class="hero-bottom"><span>La previa y el minuto a minuto</span><span>·</span><span>Forma reciente</span></div></section><section class="card"><div class="card-head"><b class="card-title">Premier League · posiciones</b><span class="card-meta">Ver tabla completa　↗</span></div>${table(standings.slice(0,3))}</section></div><aside class="stack"><section class="card"><div class="card-head"><b class="card-title">Agenda de hoy</b><span class="card-meta">4 partidos</span></div>${match('18:30','inter','2 – 0','milan','Serie A','Finalizado')}${match('20:45','real','— : —','barca','La Liga','Próximo')}</section><section class="card"><div class="card-head"><b class="card-title">Resumen semanal</b><span class="badge">5–11 OCT</span></div><div class="stats"><div class="stat"><b>28</b><span>partidos</span></div><div class="stat"><b>06</b><span>competiciones</span></div><div class="stat"><b>02</b><span>en vivo</span></div></div></section></aside></div>`;}
+    function week(){return `<div class="week-strip">${[['LUN','05','3'],['MAR','06','4'],['MIÉ','07','6'],['JUE','08','5'],['VIE','09','2'],['SÁB','10','8'],['DOM','11','7']].map((d,i)=>`<button class="day-chip ${i===2?'active':''}"><span>${d[0]}</span><b>${d[1]}</b><small>${d[2]} PJ</small></button>`).join('')}</div>`;}
+    function calendar(){return `${pageHead('FIXTURE · EUROPA','Calendario de partidos','Resultados recientes y próximos encuentros por fecha.','TODAS LAS LIGAS　⌄')}<div class="week-strip">${[['LUN','05','3'],['MAR','06','4'],['MIÉ','07','6'],['JUE','08','5'],['VIE','09','2'],['SÁB','10','8'],['DOM','11','7']].map((d,i)=>`<button class="day-chip ${i===2?'active':''}"><span>${d[0]}</span><b>${d[1]}</b><small>${d[2]} PJ</small></button>`).join('')}</div><div class="page-head" style="align-items:center;margin:0 0 10px"><div class="badge">MIÉRCOLES 7 OCTUBRE · 6 PARTIDOS</div><div><button class="filter">Todas las competiciones　⌄</button> <button class="filter">Zona horaria: ART　⌄</button></div></div><div class="calendar-grid"><section class="calendar-day"><div class="day-title"><time>15:00</time>INICIO DE JORNADA</div>${match('15:00','villa','1 – 0','liverpool','Premier League','Finalizado')}${match('17:30','arsenal','— : —','city','Premier League','Jornada 8')}</section><section class="calendar-day"><div class="day-title"><time>18:30</time>ITALIA · SERIE A</div>${match('18:30','inter','2 – 0','milan','Serie A','Finalizado')}${match('20:45','milan','— : —','inter','Serie A','Próximo')}</section><section class="calendar-day"><div class="day-title"><time>21:00</time>ESPAÑA · LA LIGA</div>${match('21:00','real','— : —','barca','La Liga','Próximo')}</section></div><p class="note">Vista semanal: elegí un día para filtrar; cada equipo abre su ficha y cada partido conserva fecha, jornada, localía, rival y estado.</p>`;}
+    function competition(){return `${pageHead('COMPETICIONES · INGLATERRA','Premier League','Tabla, forma y calendario de la temporada.','2026 / 27　⌄')}<div class="grid-two"><section class="card"><div class="card-head"><b class="card-title">Tabla de posiciones</b><span class="badge">JORNADA 8</span></div>${table(standings)}</section><aside class="stack"><section class="card"><div class="card-head"><b class="card-title">Próximos partidos</b></div>${match('17:30','arsenal','— : —','city','Premier League','Jornada 8')}${match('19:45','liverpool','— : —','villa','Premier League','Jornada 8')}</section><section class="card"><div class="card-head"><b class="card-title">Forma de la liga</b></div><div class="stats"><div class="stat"><b>2.71</b><span>goles / partido</span></div><div class="stat"><b>18</b><span>equipos</span></div><div class="stat"><b>380</b><span>partidos</span></div></div></section></aside></div>`;}
+    function team(){return `${pageHead('EQUIPO · INGLATERRA','Ficha de equipo','Calendario, posición actual y plantel.','TEMPORADA 26/27')}<section class="card"><div class="team-banner">${crest('arsenal')}<div><h3>Arsenal FC</h3><p>Premier League · Londres · Emirates Stadium</p></div><span class="badge" style="margin-left:auto">1.º · 18 PTS</span></div><div class="tabs"><span>Resumen</span><span class="selected">Plantel</span><span>Calendario</span><span>Rendimiento</span></div><div class="squad">${[['David Raya','España · Arquero'],['William Saliba','Francia · Defensor'],['Gabriel Magalhães','Brasil · Defensor'],['Declan Rice','Inglaterra · Mediocampista'],['Martin Ødegaard','Noruega · Mediocampista'],['Bukayo Saka','Inglaterra · Delantero']].map(p=>`<div class="player"><b>${p[0]}</b><small>${p[1]} · Ver ficha　↗</small></div>`).join('')}</div></section><section class="card" style="margin-top:11px"><div class="card-head"><b class="card-title">Siguiente partido</b><span class="card-meta">Jornada 8 · hoy 17:30</span></div>${match('17:30','arsenal','— : —','city','Premier League','Emirates Stadium · Local')}</section>`;}
+    function search(){return `${pageHead('BÚSQUEDA GLOBAL','Resultados para “Martínez”','Coincidencias completas; cada fila abre el perfil.','NOMBRE O CLUB')}<section class="card"><div class="result-card"><div><div class="result-type">Jugador · Delantero</div><div class="result-name">Lautaro Martínez</div><div class="result-meta">Argentina · ${club('inter')} · Serie A</div></div><button class="open">Ver jugador　↗</button></div><div class="result-card"><div><div class="result-type">Jugador · Defensor</div><div class="result-name">Lisandro Martínez</div><div class="result-meta">Argentina · ${club('manutd')} · Premier League</div></div><button class="open">Ver jugador　↗</button></div><div class="result-card"><div><div class="result-type">Equipo</div><div class="result-name"><span class="club-mark">${crest('inter')}FC Internazionale Milano</span></div><div class="result-meta">Italia · Serie A</div></div><button class="open">Abrir equipo　↗</button></div></section>`;}
+    function render(){const view={home,calendar,competition,team,search,statistics:home}[screen]();const app=document.getElementById('app');app.dataset.theme=theme;app.classList.toggle('collapsed',collapsed);app.classList.remove('menu-open');app.innerHTML=shell(view);document.querySelectorAll('[data-nav]').forEach(b=>b.addEventListener('click',()=>{screen=b.dataset.nav;render();updateScreenButtons();}));document.getElementById('toggle').addEventListener('click',()=>{const small=window.matchMedia('(max-width:900px)').matches;if(small)app.classList.toggle('menu-open');else{collapsed=!collapsed;render();}});document.getElementById('searchOpen').addEventListener('click',()=>{screen='search';render();updateScreenButtons();});}
+    function updateScreenButtons(){document.querySelectorAll('[data-screen]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.screen===screen)));}
+    document.querySelectorAll('[data-theme-choice]').forEach(b=>b.addEventListener('click',()=>{theme=b.dataset.themeChoice;document.querySelectorAll('[data-theme-choice]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));render();updateNotes();}));
+    document.querySelectorAll('[data-screen]').forEach(b=>b.addEventListener('click',()=>{screen=b.dataset.screen;render();updateScreenButtons();}));
+    function updateNotes(){const n=notes[theme];document.getElementById('notes').innerHTML=`<article class="design-note"><b>${n[0]} · Identidad</b>${n[1]}</article><article class="design-note"><b>Calendario</b>${n[2]}</article><article class="design-note"><b>Enfoque</b>Web adaptable: la pizarra mantiene contraste y navegación clara en pantalla grande y móvil.</article>`;}
+    render();updateNotes();
+  </script>
+</body>
+</html>

@@ -87,7 +87,7 @@ def main() -> int:
                     mapping.external_code = external_code or mapping.external_code
                     session.add(mapping)
         print("Competitions seeded        8")
-        print("Sources seeded             3")
+        print(f"Sources seeded             {len(SOURCES)}")
         mapping_count = sum(len(definition.provider_codes) for definition in COMPETITIONS)
         print(f"Source mappings seeded     {mapping_count}")
         print("Schema migration            OK")

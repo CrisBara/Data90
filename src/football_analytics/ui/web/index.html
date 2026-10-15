@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#07131d">
+    <meta name="description" content="Data90: calendario, competiciones y estadísticas de fútbol.">
+    <title>Data90</title>
+    <script>
+      if (location.protocol === "file:") {
+        location.replace(new URL("../../../../dist/share/Data90-Compartir.html", location.href).href);
+      }
+    </script>
+    <link rel="stylesheet" href="/assets/app.css">
+    <script src="/assets/app.js" defer></script>
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="brand">
+        <button class="brand-mark-trigger" id="brandPreviewButton" type="button" aria-label="Ampliar logo Data90" title="Ver logo ampliado">
+          <img class="brand-mark" src="/assets/data90-mark.svg" alt="">
+        </button>
+        <a class="brand-copy-link" href="#/home" aria-label="Data90, inicio">
+          <span class="brand-copy"><strong>Data90</strong><small>FÚTBOL · DATOS · ANÁLISIS</small></span>
+        </a>
+      </div>
+      <nav class="top-nav" aria-label="Navegación principal">
+        <a class="nav-link active" href="#/home" data-nav="home">Inicio</a>
+        <a class="nav-link" href="#/competitions" data-nav="competitions">Competiciones</a>
+      </nav>
+      <button class="button primary sync-button" id="syncButton" type="button">Actualizar datos</button>
+      <form class="search-form" id="searchForm" role="search">
+        <label class="sr-only" for="globalSearch">Buscar equipo o jugador</label>
+        <input id="globalSearch" name="q" type="search" placeholder="Buscar equipo o jugador…" autocomplete="off">
+        <button class="button primary" type="submit">Buscar</button>
+      </form>
+    </header>
+    <section class="sync-panel" id="syncPanel" hidden aria-live="polite">
+      <div class="sync-panel-heading">
+        <strong>Actualización completa</strong>
+        <span id="syncSummary">Lista para iniciar.</span>
+      </div>
+      <progress id="syncProgress" hidden></progress>
+      <details id="syncDetails">
+        <summary>Ver fuentes y pasos</summary>
+        <ul id="syncLog"></ul>
+      </details>
+    </section>
+    <div class="page-shell">
+      <main id="appView" tabindex="-1" aria-live="polite">
+        <section class="loading-state"><span class="loader"></span><p>Cargando datos de la aplicación…</p></section>
+      </main>
+    <dialog class="brand-preview-dialog" id="brandPreviewDialog" aria-label="Logo Data90 ampliado">
+      <button class="brand-preview-close" id="brandPreviewClose" type="button" aria-label="Cerrar">×</button>
+      <img src="/assets/data90-logo-full.svg" alt="Logo Data90 completo con D90 en cursiva">
+      <strong>Data90</strong>
+    </dialog>
+    </div>
+    <footer class="app-footer"><span>Data90</span><span>Datos de las fuentes configuradas en la aplicación</span></footer>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  </body>
+</html>

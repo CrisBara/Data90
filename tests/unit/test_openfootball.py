@@ -67,6 +67,37 @@ def test_openfootball_does_not_treat_score_array_as_a_final_score(
     assert match.away_score_ft is None
 
 
+def test_openfootball_bulk_import_can_skip_unusable_kickoff_records(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    provider = OpenFootballProvider()
+    monkeypatch.setattr(
+        provider,
+        "request_json",
+        lambda _path: {
+            "matches": [
+                {
+                    "date": "2020-03-01",
+                    "team1": "Arsenal FC",
+                    "team2": "Chelsea FC",
+                },
+                {
+                    "date": "2020-03-08",
+                    "time": "16:30",
+                    "team1": "Arsenal FC",
+                    "team2": "Chelsea FC",
+                    "score": {"ft": [2, 1]},
+                },
+            ]
+        },
+    )
+
+    matches = list(provider.get_matches("PL", 2019, "en.1.json", skip_incomplete=True))
+
+    assert len(matches) == 1
+    assert provider.incomplete_match_count == 1
+
+
 def test_openfootball_rejects_unconfigured_timezone_before_request(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
@@ -131,3 +162,34 @@ def test_openfootball_team_catalog_is_deduplicated_and_dataset_is_cached(
         "Liverpool FC",
     ]
     assert len(calls) == 1
+
+
+def test_openfootball_team_catalog_can_skip_incomplete_records(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    provider = OpenFootballProvider()
+    monkeypatch.setattr(
+        provider,
+        "request_json",
+        lambda _path: {
+            "matches": [
+                {
+                    "date": "2025-08-16",
+                    "time": "12:30",
+                    "team1": "Arsenal FC",
+                    "team2": "Liverpool FC",
+                },
+                {
+                    "date": "2025-08-23",
+                    "team1": "Missing kickoff FC",
+                    "team2": "Chelsea FC",
+                },
+            ]
+        },
+    )
+
+    teams = list(
+        provider.get_teams("PL", 2025, "en.1.json", skip_incomplete=True)
+    )
+
+    assert [team.canonical_name for team in teams] == ["Arsenal FC", "Liverpool FC"]

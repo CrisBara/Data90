@@ -50,6 +50,12 @@ class CompetitionMatchItem(NamedTuple):
     away_score_ft: int | None
     matchday: int | None
     stage: str | None
+    home_team_id: int
+    away_team_id: int
+    home_crest_url: str | None = None
+    away_crest_url: str | None = None
+    round_label: str | None = None
+    match_id: int | None = None
 
 
 class StandingItem(NamedTuple):
@@ -64,6 +70,8 @@ class StandingItem(NamedTuple):
     goal_difference: int
     points: int
     form: str | None
+    team_id: int
+    crest_url: str | None = None
 
 
 def competition_seasons(session: Session, competition_id: int) -> list[CompetitionSeasonItem]:
@@ -146,6 +154,12 @@ def matches_for_competition_season(
             Match.away_score_ft,
             Match.matchday,
             Match.stage,
+            Match.home_team_id,
+            Match.away_team_id,
+            home.crest_url,
+            away.crest_url,
+            Match.round_label,
+            Match.id,
         )
         .join(home, Match.home_team_id == home.id)
         .join(away, Match.away_team_id == away.id)
@@ -161,7 +175,10 @@ def standings_for_competition_season(
     latest_snapshot = session.scalar(
         select(StandingsSnapshot.id)
         .join(DataSource, DataSource.id == StandingsSnapshot.source_id)
-        .where(StandingsSnapshot.competition_season_id == competition_season_id)
+        .where(
+            StandingsSnapshot.competition_season_id == competition_season_id,
+            StandingsSnapshot.scope == "TOTAL",
+        )
         .order_by(DataSource.priority, StandingsSnapshot.snapshot_at.desc())
         .limit(1)
     )
@@ -180,6 +197,8 @@ def standings_for_competition_season(
             StandingRow.goal_difference,
             StandingRow.points,
             StandingRow.form,
+            StandingRow.team_id,
+            Team.crest_url,
         )
         .join(Team, Team.id == StandingRow.team_id)
         .where(StandingRow.snapshot_id == latest_snapshot)

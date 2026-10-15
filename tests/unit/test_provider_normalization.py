@@ -89,6 +89,35 @@ def test_openligadb_validates_season_suffix_in_competition_name() -> None:
     )
 
 
+def test_openligadb_goal_getters_are_normalized_without_inventing_missing_stats() -> None:
+    provider = OpenLigaDBProvider()
+    provider.request_json = lambda _path: [  # type: ignore[method-assign]
+        {"goalGetterId": 42, "goalGetterName": "  Forward Example  ", "goalCount": 7}
+    ]
+
+    players = provider.get_goal_getters("UEL", 2026, "uel2026")
+
+    assert len(players) == 1
+    assert players[0].external_id == "42"
+    assert players[0].display_name == "Forward Example"
+    assert players[0].goals == 7
+    assert players[0].assists is None
+
+
+def test_openligadb_rejects_incomplete_goal_getter_rows() -> None:
+    provider = OpenLigaDBProvider()
+    provider.request_json = lambda _path: [  # type: ignore[method-assign]
+        {"goalGetterId": 42, "goalGetterName": None, "goalCount": 7}
+    ]
+
+    try:
+        provider.get_goal_getters("UEL", 2026, "uel2026")
+    except ProviderError as error:
+        assert "incompleto" in str(error)
+    else:
+        raise AssertionError("Se esperaba rechazar un goleador incompleto")
+
+
 def test_openligadb_incremental_sync_skips_groups_without_changes() -> None:
     provider = OpenLigaDBProvider()
     provider.get_available_groups = lambda *_args: [  # type: ignore[method-assign]

@@ -31,8 +31,14 @@ class TeamMetrics:
     form_last_5: str
     form_last_10: str
     home_played: int
+    home_won: int
+    home_drawn: int
+    home_lost: int
     home_points: int
     away_played: int
+    away_won: int
+    away_drawn: int
+    away_lost: int
     away_points: int
     unbeaten_streak: int
     win_streak: int
@@ -44,6 +50,7 @@ def calculate_team_metrics(matches: Iterable[TeamMatchResult]) -> TeamMetrics:
     results: list[str] = []
     points_by_match: list[int] = []
     home_points = away_points = home_played = away_played = 0
+    home_won = home_drawn = home_lost = away_won = away_drawn = away_lost = 0
     goals_for = goals_against = wins = draws = losses = clean_sheets = failed_to_score = 0
 
     for match in ordered:
@@ -67,9 +74,15 @@ def calculate_team_metrics(matches: Iterable[TeamMatchResult]) -> TeamMetrics:
         if match.is_home:
             home_played += 1
             home_points += points
+            home_won += outcome == "W"
+            home_drawn += outcome == "D"
+            home_lost += outcome == "L"
         else:
             away_played += 1
             away_points += points
+            away_won += outcome == "W"
+            away_drawn += outcome == "D"
+            away_lost += outcome == "L"
 
     played = len(ordered)
     unbeaten_streak = _streak(results, lambda result: result != "L")
@@ -97,8 +110,14 @@ def calculate_team_metrics(matches: Iterable[TeamMatchResult]) -> TeamMetrics:
         form_last_5="".join(results[-5:]),
         form_last_10="".join(results[-10:]),
         home_played=home_played,
+        home_won=home_won,
+        home_drawn=home_drawn,
+        home_lost=home_lost,
         home_points=home_points,
         away_played=away_played,
+        away_won=away_won,
+        away_drawn=away_drawn,
+        away_lost=away_lost,
         away_points=away_points,
         unbeaten_streak=unbeaten_streak,
         win_streak=win_streak,

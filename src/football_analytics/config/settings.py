@@ -22,8 +22,16 @@ class Settings(BaseSettings):
     database_user: str = "football_app"
     database_password: SecretStr = SecretStr("")
     football_data_token: SecretStr = SecretStr("")
+    api_football_token: SecretStr = SecretStr("")
+    highlightly_api_key: SecretStr = SecretStr("")
+    pitchapi_api_key: SecretStr = SecretStr("")
     sync_enabled: bool = True
-    sync_time: str = "08:00"
+    sync_time: str = "07:00"
+    fap_web_database_url: SecretStr = SecretStr("")
+    fap_web_host: str = "127.0.0.1"
+    fap_web_port: int = Field(default=8765, ge=1, le=65535)
+    fap_web_allow_remote: bool = False
+    fap_web_allowed_hosts: str = "localhost,127.0.0.1,::1"
 
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="ignore")
 

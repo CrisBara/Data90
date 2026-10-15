@@ -99,6 +99,29 @@ def test_competition_queries_return_local_fixtures_and_standings() -> None:
                 ),
             ]
         )
+        newer_home_snapshot = StandingsSnapshot(
+            competition_season_id=competition_season.id,
+            source_id=source.id,
+            scope="HOME",
+            snapshot_at=datetime(2026, 10, 3, tzinfo=UTC),
+        )
+        session.add(newer_home_snapshot)
+        session.flush()
+        session.add(
+            StandingRow(
+                snapshot_id=newer_home_snapshot.id,
+                team_id=away.id,
+                position=1,
+                played=1,
+                won=1,
+                drawn=0,
+                lost=0,
+                goals_for=5,
+                goals_against=0,
+                goal_difference=5,
+                points=3,
+            )
+        )
 
     with factory() as session:
         competitions = competition_list(session)
