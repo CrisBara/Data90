@@ -38,7 +38,7 @@ pip install -e ".[dev]"
 Copy-Item .env.example .env
 ```
 
-Configura la base aislada `football_analytics_pro` y el usuario local de mínimo privilegio `football_app` según [docs/installation-windows.md](docs/installation-windows.md). Completa `.env` con la contraseña local de la aplicación y el token del proveedor; nunca guardes esos valores en Git.
+Configura la base aislada `data90_local` y el usuario local de mínimo privilegio `football_app` según [docs/installation-windows.md](docs/installation-windows.md). Completa `.env` con la contraseña local de la aplicación y el token del proveedor; nunca guardes esos valores en Git.
 
 ## Bootstrap y ejecución
 

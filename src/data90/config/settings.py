@@ -18,7 +18,7 @@ class Settings(BaseSettings):
     app_timezone: str = "America/Argentina/Buenos_Aires"
     database_host: str = "localhost"
     database_port: int = Field(default=5432, ge=1, le=65535)
-    database_name: str = "football_analytics_pro"
+    database_name: str = "data90_local"
     database_user: str = "football_app"
     database_password: SecretStr = SecretStr("")
     football_data_token: SecretStr = SecretStr("")
