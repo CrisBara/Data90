@@ -18,7 +18,6 @@ from enum import Enum
 from http import HTTPStatus
 from pathlib import Path
 from urllib.parse import parse_qs
-from wsgiref.simple_server import make_server
 from zoneinfo import ZoneInfo
 
 from sqlalchemy import text
@@ -36,6 +35,7 @@ from data90.domain.exceptions import EntityResolutionError
 from data90.repositories.global_search import search_teams_and_players
 from data90.repositories.players import (
     player_profile_detail,
+    player_position_label,
     player_roster_for_competition_season,
     player_statistics_for_competition_season,
     scorer_snapshot_player_ids,
@@ -44,7 +44,6 @@ from data90.services.competition_service import CompetitionService
 from data90.services.featured_match_policy import featured_match_policy
 from data90.services.match_service import MatchService
 from data90.services.statistics_service import StatisticsService
-from data90.services.sync_job import SyncJob
 from data90.services.team_service import TeamService
 from data90.sync.normalizer import normalize_name
 
@@ -433,17 +432,10 @@ def _competition_scorers(player_stats, roster_by_player, snapshot_ids: set[int])
                 if values["source"] == "fotmob":
                     continue
             if field == "appearances" and value is not None:
-                if player.source_code == "fpl-premier-league":
+                if values[field] is None or value > values[field]:
                     values[field] = value
                     values["appearance_source"] = player.source_code
-                    continue
-                if player.source_code == "fotmob":
-                    if values["appearance_source"] != "fpl-premier-league":
-                        values[field] = value
-                        values["appearance_source"] = player.source_code
-                    continue
-                if values["appearance_source"] in {"fpl-premier-league", "fotmob"}:
-                    continue
+                continue
             if value is not None and (values[field] is None or value > values[field]):
                 values[field] = value
                 if field == "appearances":
@@ -453,7 +445,11 @@ def _competition_scorers(player_stats, roster_by_player, snapshot_ids: set[int])
 
     output = []
     ordered = sorted(
-        ((player_id, item) for player_id, item in merged.items() if item["goals"] is not None and item["goals"] > 0),
+        (
+            (player_id, item)
+            for player_id, item in merged.items()
+            if item["goals"] is not None and item["goals"] > 0
+        ),
         key=lambda item: (-item[1]["goals"], str(item[1]["name"]).casefold()),
     )
     for player_id, item in ordered:
@@ -505,14 +501,32 @@ def _same_player_name_variant(left: str, right: str) -> bool:
 
 
 def _is_knockout_match(match) -> bool:
-    phase = " ".join(
-        str(value or "") for value in (match.stage, getattr(match, "round_label", None))
-    ).casefold().replace("_", " ")
+    phase = (
+        " ".join(str(value or "") for value in (match.stage, getattr(match, "round_label", None)))
+        .casefold()
+        .replace("_", " ")
+    )
     phase = re.sub(r"[–—-]", " ", phase)
     markers = (
-        "knockout", "play off", "playoff", "round of", "round-of", "last 16", "last 8",
-        "quarter final", "semi final", "final", "octavos", "dieciseisavos", "cuartos",
-        "semifinal", "repechaje", "eliminatoria", "1/8", "1/4", "1/16",
+        "knockout",
+        "play off",
+        "playoff",
+        "round of",
+        "round-of",
+        "last 16",
+        "last 8",
+        "quarter final",
+        "semi final",
+        "final",
+        "octavos",
+        "dieciseisavos",
+        "cuartos",
+        "semifinal",
+        "repechaje",
+        "eliminatoria",
+        "1/8",
+        "1/4",
+        "1/16",
     )
     return any(marker in phase for marker in markers)
 
@@ -536,6 +550,9 @@ def _team_detail(session, team_id: int, requested_season: str | None):
         if selected and selected.competition_code in TEAM_RIVALRY_CODES
         else ()
     )
+    squad = _jsonable(profile.squad)
+    for player in squad:
+        player["position"] = player_position_label(player.get("position"))
     return {
         "team": {
             "id": profile.team_id,
@@ -554,7 +571,7 @@ def _team_detail(session, team_id: int, requested_season: str | None):
         "match_history": _jsonable(profile.match_history),
         "match_statistics": _jsonable(profile.match_stat_averages),
         "match_stat_totals": _jsonable(profile.stat_totals),
-        "squad": _jsonable(profile.squad),
+        "squad": squad,
         "rivalries": _jsonable(rivalries),
     }
 
@@ -572,6 +589,9 @@ def _player_detail(session, player_id: int):
             - ((today.month, today.day) < (profile.birth_date.month, profile.birth_date.day))
         )
     payload = _jsonable(profile)
+    payload["position"] = player_position_label(profile.position)
+    for membership in payload.get("team_competitions", []):
+        membership["position"] = player_position_label(membership.get("position"))
     payload["age"] = age
     return payload
 
@@ -579,10 +599,20 @@ def _player_detail(session, player_id: int):
 class FootballAnalyticsWeb:
     """Small same-origin WSGI service with a read-only JSON API."""
 
-    def __init__(self, session_factory=None, engine: Engine | None = None) -> None:
+    def __init__(
+        self,
+        session_factory=None,
+        engine: Engine | None = None,
+        *,
+        enable_sync: bool = True,
+    ) -> None:
         self._factory = session_factory
         self._engine = engine
-        self._sync_job = SyncJob()
+        self._sync_job = None
+        if enable_sync:
+            from data90.services.sync_job import SyncJob
+
+            self._sync_job = SyncJob()
 
     def _sessions(self):
         if self._factory is None:
@@ -695,11 +725,21 @@ class FootballAnalyticsWeb:
             )
         path = environ.get("PATH_INFO", "/")
         if path == "/api/sync/status" and method == "GET":
-            payload = json.dumps(self._sync_job.snapshot(), ensure_ascii=False).encode("utf-8")
+            payload = json.dumps(
+                self._sync_job.snapshot() if self._sync_job else {"running": False},
+                ensure_ascii=False,
+            ).encode("utf-8")
             return self._reply(
                 start_response, HTTPStatus.OK, payload, "application/json; charset=utf-8"
             )
         if path == "/api/sync" and method == "POST":
+            if self._sync_job is None:
+                return self._reply(
+                    start_response,
+                    HTTPStatus.NOT_FOUND,
+                    b"No encontrado",
+                    "text/plain; charset=utf-8",
+                )
             origin = environ.get("HTTP_ORIGIN", "")
             host = environ.get("HTTP_HOST", "").casefold()
             try:
@@ -800,6 +840,8 @@ application = FootballAnalyticsWeb()
 
 
 def main() -> int:
+    from wsgiref.simple_server import make_server
+
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
     settings = get_settings()
     host = settings.data90_web_host.strip()

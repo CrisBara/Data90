@@ -126,17 +126,40 @@
     row.addEventListener("dblclick", () => navigate(`/team/${match.home.id}`));
     return row;
   }
-  function appendTable(host, headers, rows, { rowLink = null, minWidth, emptyMessage = "No hay datos publicados para mostrar.", tableClass = "" } = {}) {
+  function appendTable(host, headers, rows, { rowLink = null, minWidth, emptyMessage = "No hay datos publicados para mostrar.", tableClass = "", sortable = null } = {}) {
     if (!rows.length) { host.append(empty(emptyMessage)); return; }
     const wrap = el("div", "data-table-wrap");
     const table = el("table", `data-table ${tableClass}`.trim());
     if (minWidth >= 1300) table.classList.add("wide-table");
     else if (minWidth >= 950) table.classList.add("medium-table");
     const thead = el("thead"), tr = el("tr");
-    headers.forEach((header, index) => { const th = el("th", index === 0 ? "name-cell" : "", header); tr.append(th); });
+    let sortColumn = -1, sortDirection = 1;
+    const headerButtons = [];
+    headers.forEach((header, index) => {
+      const th = el("th", index === 0 ? "name-cell" : "");
+      if (sortable) {
+        const control = button(header, () => sortRows(index), "sortable-header");
+        control.setAttribute("aria-sort", "none");
+        headerButtons[index] = control;
+        th.append(control);
+      } else th.textContent = header;
+      tr.append(th);
+    });
     thead.append(tr);
     const tbody = el("tbody");
-    rows.forEach((row, rowIndex) => {
+    const entries = rows.map((row, index) => ({ row, index, keys: sortable?.keys?.[index] || [] }));
+    function compareSortValues(left, right, kind) {
+      const a = left === undefined ? null : left, b = right === undefined ? null : right;
+      if (a === null || a === "") return b === null || b === "" ? 0 : 1;
+      if (b === null || b === "") return -1;
+      if (kind === "position") {
+        const rank = Number(a[0]) - Number(b[0]);
+        return rank || String(a[1]).localeCompare(String(b[1]), "es", { sensitivity: "base" });
+      }
+      if (kind === "number") return Number(a) - Number(b);
+      return String(a).localeCompare(String(b), "es", { sensitivity: "base", numeric: true });
+    }
+    function buildRow({ row, index }) {
       const line = el("tr");
       row.forEach((cell, index) => {
         const td = el("td", index === 0 ? "name-cell" : "");
@@ -144,9 +167,30 @@
         if (cell instanceof Node) td.append(cell); else td.textContent = cell === null || cell === undefined ? "—" : String(cell);
         line.append(td);
       });
-      if (rowLink) { line.classList.add("clickable-row"); line.addEventListener("click", (event) => { if (!event.target.closest("button,a")) rowLink(rowIndex); }); }
-      tbody.append(line);
-    });
+      if (rowLink) { line.classList.add("clickable-row"); line.addEventListener("click", (event) => { if (!event.target.closest("button,a")) rowLink(index); }); }
+      return line;
+    }
+    function renderRows() { tbody.replaceChildren(...entries.map(buildRow)); }
+    function sortRows(column) {
+      if (sortColumn === column) sortDirection *= -1;
+      else { sortColumn = column; sortDirection = 1; }
+      const kind = sortable.types[column] || "text";
+      entries.sort((a, b) => {
+        const left = a.keys[column], right = b.keys[column];
+        const leftMissing = left === null || left === undefined || left === "";
+        const rightMissing = right === null || right === undefined || right === "";
+        if (leftMissing || rightMissing) return leftMissing === rightMissing ? a.index - b.index : (leftMissing ? 1 : -1);
+        return sortDirection * compareSortValues(left, right, kind) || a.index - b.index;
+      });
+      headerButtons.forEach((control, index) => {
+        const active = index === sortColumn;
+        control.setAttribute("aria-sort", active ? (sortDirection === 1 ? "ascending" : "descending") : "none");
+        control.dataset.direction = active ? (sortDirection === 1 ? "asc" : "desc") : "";
+      });
+      renderRows();
+    }
+    if (sortable && sortable.initialColumn >= 0) sortRows(sortable.initialColumn);
+    else renderRows();
     table.append(thead, tbody); wrap.append(table); host.append(wrap);
   }
   function empty(message) { return el("div", "empty-state", message); }
@@ -432,10 +476,35 @@
     root.append(content); app.replaceChildren(root);
   }
   function age(birth) { if(!birth) return missing; const d=new Date(`${birth}T12:00:00`), now=new Date(); let n=now.getFullYear()-d.getFullYear(); if(now.getMonth()<d.getMonth() || now.getMonth()===d.getMonth()&&now.getDate()<d.getDate()) n--; return n; }
+  function positionDisplay(value) {
+    const position=String(value||"").normalize("NFKD").replace(/[\u0300-\u036f]/g,"").replace(/[-_]/g," ").toLocaleLowerCase("es").trim().replace(/\s+/g," ");
+    if(!position)return "No informada";
+    const exact={gk:"Portero",g:"Portero",p:"Portero",goalkeeper:"Portero",goalie:"Portero",keeper:"Portero",portero:"Portero",arquero:"Portero",goleiro:"Portero",doelman:"Portero",torwart:"Portero",gardien:"Portero",portiere:"Portero",cb:"Defensa central","centre back":"Defensa central","center back":"Defensa central","central defender":"Defensa central",zagueiro:"Defensa central",lb:"Lateral izquierdo","left back":"Lateral izquierdo",rb:"Lateral derecho","right back":"Lateral derecho",lwb:"Carrilero izquierdo","left wing back":"Carrilero izquierdo",rwb:"Carrilero derecho","right wing back":"Carrilero derecho",def:"Defensa",df:"Defensa",d:"Defensa",defender:"Defensa",defence:"Defensa",defense:"Defensa",defensa:"Defensa",abwehr:"Defensa",dm:"Mediocampista defensivo",cdm:"Mediocampista defensivo","defensive midfielder":"Mediocampista defensivo",cm:"Mediocampista central","central midfielder":"Mediocampista central","central midfield":"Mediocampista central",am:"Mediocampista ofensivo",cam:"Mediocampista ofensivo","attacking midfielder":"Mediocampista ofensivo",lm:"Mediocampista por izquierda","left midfielder":"Mediocampista por izquierda",rm:"Mediocampista por derecha","right midfielder":"Mediocampista por derecha",m:"Mediocampista",mf:"Mediocampista",midfielder:"Mediocampista",midfield:"Mediocampista",mediocampista:"Mediocampista",medio:"Mediocampista",milieu:"Mediocampista",mittelfeld:"Mediocampista",meia:"Mediocampista",lw:"Extremo izquierdo","left winger":"Extremo izquierdo",rw:"Extremo derecho","right winger":"Extremo derecho",ss:"Segundo delantero","second striker":"Segundo delantero",cf:"Delantero centro",st:"Delantero centro","centre forward":"Delantero centro","center forward":"Delantero centro",striker:"Delantero centro",fw:"Delantero",f:"Delantero",forward:"Delantero",attacker:"Delantero",attaquant:"Delantero",attaccante:"Delantero",atacante:"Delantero",delantero:"Delantero",spits:"Delantero",aanvaller:"Delantero",extremo:"Delantero",punta:"Delantero"};
+    if(exact[position])return exact[position];
+    if(/goalkeeper|goal keeper|goalie|keeper|portero|arquero|goleiro|doelman|torwart|gardien|portiere/.test(position))return "Portero";
+    if(/defender|defence|defense|defens|defensa|verdediger|centre back|center back|full back|left back|right back|abwehr|difensore|zagueiro/.test(position))return "Defensa";
+    if(/midfielder|midfield|mediocampista|medio|middenvelder|centrocampista|milieu|mittelfeld|meio campista/.test(position))return "Mediocampista";
+    if(/forward|attacker|attack|offence|offense|delantero|spits|aanvaller|striker|winger|extremo|punta|attaccante|atacante|attaquant|sturm/.test(position))return "Delantero";
+    return "Otra posición";
+  }
   function renderSquad(host,squad) {
     addHeading(host,"Plantel",`${squad.length} jugadores vinculados a esta plantilla`);
-    const rows=squad.map(item=>[linkButton(item.player_name,()=>navigate(`/player/${item.player_id}`),"player-link"),item.nationality||missing,item.position||missing,item.birth_date?age(item.birth_date):missing,num(item.shirt_number)]);
-    appendTable(host,["Jugador","Nacionalidad","Posición","Edad","Dorsal"],rows,{minWidth:0,tableClass:"squad-table"});
+    const rows=squad.map(item=>[linkButton(item.player_name,()=>navigate(`/player/${item.player_id}`),"player-link"),item.nationality||missing,positionDisplay(item.position),item.birth_date?age(item.birth_date):missing,num(item.shirt_number)]);
+    const normalize=value=>String(value||"").normalize("NFKD").replace(/[\u0300-\u036f]/g,"").toLocaleLowerCase("es").trim();
+    const positionKey=value=>{
+      const position=normalize(value);
+      const rank=/goalkeeper|goal keeper|goalie|keeper|portero|arquero|doelman|torwart|gardien|portiere/.test(position)?0:
+        /defender|defence|defens|defensa|verdediger|centre back|center back|full back|left back|right back/.test(position)?1:
+        /midfielder|midfield|mediocampista|medio|middenvelder|centrocampista|attacking mid|left mid|right mid/.test(position)?2:
+        /forward|attacker|attack|offence|offense|delantero|spits|aanvaller|striker|winger|extremo|punta/.test(position)?3:4;
+      return [rank,position];
+    };
+    const sortable={
+      initialColumn:2,
+      types:["text","text","position","number","number"],
+      keys:squad.map(item=>[normalize(item.player_name),normalize(item.nationality),positionKey(item.position),item.birth_date?age(item.birth_date):null,item.shirt_number===null||item.shirt_number===undefined?null:Number(item.shirt_number)])
+    };
+    appendTable(host,["Jugador","Nacionalidad","Posición","Edad","Dorsal"],rows,{minWidth:0,tableClass:"squad-table",sortable});
   }
   function renderTeamMatches(host,matches,team) {
     addHeading(host,"Historial de partidos",`${matches.length} partidos vinculados al equipo`);
@@ -491,7 +560,7 @@
   function renderPlayer(data) {
     const root=el("div");const back=button("← Volver",()=>history.back());root.append(back);
     const hero=el("section","profile-hero player-hero");const copy=el("div","hero-copy");copy.append(el("div","eyebrow","Ficha del jugador"),el("h1","",data.display_name),el("p","",(data.team_competitions||[]).map(x=>`${x.team_name} · ${x.competition_name}`).join(" / ")||"Equipo no informado"));hero.append(copy);root.append(hero);
-    const memberships=data.team_competitions||[];const primary=memberships[0]||{};const fields=[["Edad",data.age===null?missing:`${data.age} años`],["Nacionalidad",data.nationality||missing],["Posición",data.position||primary.position||missing],["Dorsal",num(primary.shirt_number)],["Pierna hábil",data.preferred_foot||missing],["Estatura",data.height||missing],["Peso",data.weight||missing],["Fecha de nacimiento",data.birth_date||missing]];
+    const memberships=data.team_competitions||[];const primary=memberships[0]||{};const fields=[["Edad",data.age===null?missing:`${data.age} años`],["Nacionalidad",data.nationality||missing],["Posición",positionDisplay(data.position||primary.position)],["Dorsal",num(primary.shirt_number)],["Pierna hábil",data.preferred_foot||missing],["Estatura",data.height||missing],["Peso",data.weight||missing],["Fecha de nacimiento",data.birth_date||missing]];
     const grid=el("div","player-overview");fields.forEach(([label,value])=>{const card=el("div","player-field");card.append(el("small","",label),el("strong","",value));grid.append(card);});root.append(grid);
     addHeading(root,"Estadísticas por competición y temporada","Se muestran valores publicados; un guion significa que la fuente no informó ese dato.");
     const stats=data.statistics||[];const rows=stats.map(s=>[`${s.competition_name} · ${s.season_label}`,num(s.appearances),num(s.starts),num(s.substitute_appearances),num(s.minutes_played),num(s.goals),num(s.assists),num(s.yellow_cards),num(s.red_cards),num(s.shots_total),num(s.shots_on_target),num(s.goals_conceded),num(s.clean_sheets)]);
